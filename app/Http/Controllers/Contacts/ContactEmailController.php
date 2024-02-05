@@ -46,12 +46,13 @@ class ContactEmailController extends Controller
             new ReportError(__('No cuenta con los permisos requeridos'), 403));
 
         $this->validate($request, [
-            'email' => ['required', 'email', 'max:100'],
+            'email_address' => ['required', 'email', 'max:100'],
             'name' => ['required', 'max:100'],
         ]);
 
         DB::transaction(function () use ($request, $contact, $email) {
             $email = $email->fill($request->all());
+            $email->email = $request->email_address;
             $email->contact_id = $contact->id;
             $email->save();
         });

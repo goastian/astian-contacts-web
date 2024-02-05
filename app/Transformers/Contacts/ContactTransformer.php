@@ -44,6 +44,13 @@ class ContactTransformer extends TransformerAbstract
             'grupo' => $grupo ? $grupo->name : null,
             'creado' => $data->created_at,
             'actualizado' => $data->updated_at,
+            'links' => [
+                'parent' => route('contacts.index'),
+                'store' => route('contacts.store'),
+                'show' => route('contacts.show', ['contact' => $data->id]),
+                'update' => route('contacts.update', ['contact' => $data->id]),
+                'destroy' => route('contacts.destroy', ['contact' => $data->id]),
+            ],
         ];
     }
 

@@ -35,6 +35,13 @@ class AppTransformer extends TransformerAbstract
             'id' => $data->id,
             'app' => $data->name,
             'link' => $data->uri,
+            'links' => [
+                'parent' => route('contacts.apps.index', ['contact' => $data->contact_id]),
+                'store' => route('contacts.apps.store', ['contact' => $data->contact_id]),
+                'show' => route('contacts.apps.show', ['contact' => $data->contact_id, 'app' => $data->id]),
+                'update' => route('contacts.apps.update', ['contact' => $data->contact_id, 'app' => $data->id]),
+                'destroy' => route('contacts.apps.destroy', ['contact' => $data->contact_id, 'app' => $data->id]),
+            ],
         ];
     }
 

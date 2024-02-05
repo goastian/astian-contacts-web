@@ -35,6 +35,13 @@ class PhoneTransformer extends TransformerAbstract
             'id' => $data->id,
             'nombre' => $data->name,
             'numero' => $data->number,
+            'links' => [
+                'parent' => route('contacts.phones.index', ['contact' => $data->contact_id]),
+                'store' => route('contacts.phones.store', ['contact' => $data->contact_id]),
+                'show' => route('contacts.phones.show', ['contact' => $data->contact_id, 'phone' => $data->id]),
+                'update' => route('contacts.phones.update', ['contact' => $data->contact_id, 'phone' => $data->id]),
+                'destroy' => route('contacts.phones.destroy', ['contact' => $data->contact_id, 'phone' => $data->id]),
+            ],
         ];
     }
 
