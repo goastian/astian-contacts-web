@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('last_name', 100);
             $table->string('address', 150)->nullable();
-            $table->string('company')->nullable();
+            $table->string('company', 150)->nullable();
             $table->uuid('group_id')->nullable();
             $table->uuid('user_id');
             $table->timestamps();
