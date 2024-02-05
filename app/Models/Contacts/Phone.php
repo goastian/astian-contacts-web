@@ -16,9 +16,15 @@ class Phone extends Master
 
     public $transformer = PhoneTransformer::class;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'name',
-        'phone',
+        'number',
     ];
 
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class);
+    }
 }

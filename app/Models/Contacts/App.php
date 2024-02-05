@@ -16,9 +16,15 @@ class App extends Master
 
     public $transformer = AppTransformer::class;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'name',
         'uri',
     ];
 
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class);
+    }
 }

@@ -43,6 +43,7 @@ class EmailTransformer extends TransformerAbstract
         $attribute = [
             'nombre' => 'name',
             'correo' => 'email',
+            'correo' => 'email_address'
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -52,7 +53,8 @@ class EmailTransformer extends TransformerAbstract
     {
         $attribute = [
             'name' => 'nombre',
-            'email' => 'corre',
+            'email' => 'correo',
+            'email_address' => 'correo'
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;

@@ -16,9 +16,15 @@ class Email extends Master
 
     public $transformer = EmailTransformer::class;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'email',
         'name',
     ];
 
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class);
+    }
 }

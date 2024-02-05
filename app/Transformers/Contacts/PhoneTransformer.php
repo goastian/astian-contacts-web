@@ -34,7 +34,7 @@ class PhoneTransformer extends TransformerAbstract
         return [
             'id' => $data->id,
             'nombre' => $data->name,
-            'numero' => $data->phone,
+            'numero' => $data->number,
         ];
     }
 
@@ -42,7 +42,7 @@ class PhoneTransformer extends TransformerAbstract
     {
         $attribute = [
             'nombre' => 'name',
-            'numero' => 'phone',
+            'numero' => 'number',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -52,7 +52,7 @@ class PhoneTransformer extends TransformerAbstract
     {
         $attribute = [
             'name' => 'nombre',
-            'phone' => 'numero',
+            'number' => 'numero',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -63,7 +63,7 @@ class PhoneTransformer extends TransformerAbstract
         $attributes = [
             'id' => 'id',
             'nombre' => 'name',
-            'numero' => 'phone',
+            'numero' => 'number',
         ];
 
         return isset($attributes[$index]) ? $attributes[$index] : null;
