@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Contacts;
 
+use App\Events\DestroyPhoneEvent;
+use App\Events\StorePhoneEvent;
+use App\Events\UpdatePhoneEvent;
 use App\Http\Controllers\GlobalController as Controller;
 use App\Models\Contacts\Contact;
 use App\Models\Contacts\Phone;
@@ -16,7 +19,7 @@ class ContactPhoneController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware('transform.request:' . PhoneTransformer::class)->only('store','update');
+        $this->middleware('transform.request:' . PhoneTransformer::class)->only('store', 'update');
     }
 
     /**
@@ -53,6 +56,8 @@ class ContactPhoneController extends Controller
             $phone = $phone->fill($request->all());
             $phone->contact_id = $contact->id;
             $phone->save();
+
+            StorePhoneEvent::dispatch();
         });
 
         return $this->showOne($phone, $phone->transformer, 201);
@@ -105,6 +110,8 @@ class ContactPhoneController extends Controller
 
             if ($updated) {
                 $phone->push();
+
+                UpdatePhoneEvent::dispatch();
             }
 
         });
@@ -125,6 +132,8 @@ class ContactPhoneController extends Controller
             new ReportError(__('No cuenta con los permisos requeridos'), 403));
 
         $phone->delete();
+
+        DestroyPhoneEvent::dispatch();
 
         return $this->showOne($phone, $phone->transformer);
     }

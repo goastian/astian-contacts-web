@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Contacts;
 
+use App\Events\DestroyEmailEvent;
+use App\Events\StoreEmailEvent;
+use App\Events\UpdateEmailEvent;
 use App\Http\Controllers\GlobalController as Controller;
 use App\Models\Contacts\Contact;
 use App\Models\Contacts\Email;
@@ -55,6 +58,8 @@ class ContactEmailController extends Controller
             $email->email = $request->email_address;
             $email->contact_id = $contact->id;
             $email->save();
+
+            StoreEmailEvent::dispatch();
         });
 
         return $this->showOne($email, $email->transformer, 201);
@@ -105,6 +110,8 @@ class ContactEmailController extends Controller
 
             if ($updated) {
                 $email->push();
+
+                UpdateEmailEvent::broadcast();
             }
 
         });
@@ -124,6 +131,8 @@ class ContactEmailController extends Controller
             new ReportError(__('No cuenta con los permisos requeridos'), 403));
 
         $email->delete();
+
+        DestroyEmailEvent::dispatch();
 
         return $this->showOne($email, $email->transformer);
     }

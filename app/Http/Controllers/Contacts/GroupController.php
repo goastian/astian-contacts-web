@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Contacts;
 
+use App\Events\DestroyGroupEvent;
+use App\Events\StoreGroupEvent;
+use App\Events\UpdateGroupEvent;
 use App\Http\Controllers\GlobalController as Controller;
 use App\Models\Contacts\Group;
 use App\Transformers\Contacts\GroupTransformer;
@@ -51,6 +54,8 @@ class GroupController extends Controller
             $group = $group->fill($request->only('name'));
             $group->user_id = $this->user()->id;
             $group->save();
+
+            StoreGroupEvent::dispatch();
         });
 
         return $this->showOne($group, $group->transformer, 201);
@@ -92,6 +97,8 @@ class GroupController extends Controller
                 $group->name = $request->name;
 
                 $group->push();
+
+                UpdateGroupEvent::dispatch();
             }
         });
 
@@ -110,6 +117,8 @@ class GroupController extends Controller
             new ReportError(__('No cuenta con los persmisos reueridos'), 403));
 
         $group->delete();
+
+        DestroyGroupEvent::dispatch();
 
         return $this->showOne($group, $group->transformer);
     }

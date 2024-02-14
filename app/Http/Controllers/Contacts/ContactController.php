@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Contacts;
 
+use App\Events\DestroyContactEvent;
+use App\Events\StoreContactEvent;
+use App\Events\UpdateContactEvent;
 use App\Http\Controllers\GlobalController as Controller;
 use App\Models\Contacts\Contact;
 use App\Models\Contacts\Group;
@@ -56,6 +59,8 @@ class ContactController extends Controller
             $contact = $contact->fill($request->all());
             $contact->user_id = $this->user()->id;
             $contact->save();
+
+            StoreContactEvent::dispatch();
         });
 
         return $this->showOne($contact, $contact->transformer, 201);
@@ -127,6 +132,8 @@ class ContactController extends Controller
 
             if ($updated) {
                 $contact->push();
+
+                UpdateContactEvent::dispatch();
             }
 
         });
@@ -147,6 +154,8 @@ class ContactController extends Controller
             new ReportError(__('No cuenta con los permisos requeridos'), 403));
 
         $contact->delete();
+
+        DestroyContactEvent::dispatch();
 
         return $this->showOne($contact, $contact->transformer);
     }
