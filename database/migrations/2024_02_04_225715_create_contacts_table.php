@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('last_name', 100);
             $table->string('address', 150)->nullable();
             $table->string('company', 150)->nullable();
+            $table->boolean('favorite')->default(0);
             $table->uuid('group_id')->nullable();
             $table->uuid('user_id');
             $table->timestamps();

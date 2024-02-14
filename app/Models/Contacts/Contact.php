@@ -26,6 +26,7 @@ class Contact extends Master
         'address',
         'company',
         'group_id',
+        'favorite'
     ];
 
     public function group()

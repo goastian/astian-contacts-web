@@ -46,7 +46,7 @@ class ContactEmailController extends Controller
     public function store(Request $request, Contact $contact, Email $email)
     {
         throw_unless($contact->user_id == $this->user()->id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $this->validate($request, [
             'email_address' => ['required', 'email', 'max:100'],
@@ -74,7 +74,7 @@ class ContactEmailController extends Controller
     public function show(Contact $contact, Email $email)
     {
         throw_if($contact->user_id != $this->user()->id or $contact->id != $email->contact_id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         return $this->showOne($email, $email->transformer);
     }
@@ -89,7 +89,7 @@ class ContactEmailController extends Controller
     public function update(Request $request, Contact $contact, Email $email)
     {
         throw_if($contact->user_id != $this->user()->id or $contact->id != $email->contact_id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $this->validate($request, [
             'email_address' => ['email', 'max:100'],
@@ -128,7 +128,7 @@ class ContactEmailController extends Controller
     public function destroy(Contact $contact, Email $email)
     {
         throw_if($contact->user_id != $this->user()->id or $contact->id != $email->contact_id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $email->delete();
 

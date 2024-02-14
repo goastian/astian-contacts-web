@@ -45,7 +45,7 @@ class ContactAppController extends Controller
     public function store(Request $request, Contact $contact, App $app)
     {
         throw_unless($contact->user_id == $this->user()->id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $this->validate($request, [
             'name' => ['required', 'max:50'],
@@ -73,7 +73,7 @@ class ContactAppController extends Controller
     public function show(Contact $contact, App $app)
     {
         throw_if($contact->user_id != $this->user()->id or $contact->id != $app->contact_id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         return $this->showOne($app);
     }
@@ -88,7 +88,7 @@ class ContactAppController extends Controller
     public function update(Request $request, Contact $contact, App $app)
     {
         throw_if($contact->user_id != $this->user()->id or $contact->id != $app->contact_id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $this->validate($request, [
             'name' => ['max:50'],
@@ -130,7 +130,7 @@ class ContactAppController extends Controller
     public function destroy(Contact $contact, App $app)
     {
         throw_if($contact->user_id != $this->user()->id or $contact->id != $app->contact_id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $app->delete();
 

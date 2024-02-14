@@ -70,7 +70,7 @@ class GroupController extends Controller
     public function show(Group $group)
     {
         throw_if($group->user_id != $this->user()->id,
-            new ReportError(__('No cuenta con los persmisos reueridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         return $this->showOne($group, $group->transformer);
     }
@@ -85,7 +85,7 @@ class GroupController extends Controller
     public function update(Request $request, Group $group)
     {
         throw_if($group->user_id != $this->user()->id,
-            new ReportError(__('No cuenta con los persmisos reueridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $this->validate($request, [
             'name' => ['max:100'],
@@ -114,7 +114,7 @@ class GroupController extends Controller
     public function destroy(Group $group)
     {
         throw_if($group->user_id != $this->user()->id,
-            new ReportError(__('No cuenta con los persmisos reueridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $group->delete();
 

@@ -23,7 +23,7 @@ class GroupContactController extends Controller
     public function index(Group $group, Contact $contact)
     {
         throw_unless($group->user_id == $this->user()->id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $params = $this->filter_transform($contact->transformer);
 

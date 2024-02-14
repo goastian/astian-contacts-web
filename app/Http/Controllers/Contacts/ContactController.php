@@ -53,6 +53,7 @@ class ContactController extends Controller
             'address' => ['max:150'],
             'company' => ['max:150'],
             'group_id' => [Rule::in($data)],
+            'favorite' => ['boolean']
         ]);
 
         DB::transaction(function () use ($request, $contact, $group) {
@@ -90,7 +91,7 @@ class ContactController extends Controller
     public function update(Request $request, Contact $contact, Group $group)
     {
         throw_if($contact->user_id != $this->user()->id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $data = $this->search($group->table, null, 'user_id', $this->user()->id)->pluck('id');
 
@@ -151,7 +152,7 @@ class ContactController extends Controller
     public function destroy(Contact $contact)
     {
         throw_if($contact->user_id != $this->user()->id,
-            new ReportError(__('No cuenta con los permisos requeridos'), 403));
+            new ReportError(__('Unauthorized user'), 403));
 
         $contact->delete();
 
