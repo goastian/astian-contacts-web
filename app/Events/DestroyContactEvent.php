@@ -19,13 +19,19 @@ class DestroyContactEvent implements ShouldBroadcast
     public $socket;
 
     /**
+     * @var String
+     */
+    public $id;
+
+    /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($id)
     {
         $this->socket = uniqid();
+        $this->id = $id;
     }
 
     /**
@@ -35,7 +41,8 @@ class DestroyContactEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel(env('CHANNEL_NAME', 'test'));
+        return new PrivateChannel(env('CHANNEL_NAME', 'auth') . "." . $this->id);
+
     }
 
     /**
