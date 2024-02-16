@@ -41,8 +41,8 @@ class ContactTransformer extends TransformerAbstract
             'apellido' => $data->last_name,
             'direccion' => $data->address,
             'empresa' => $data->company,
-            'group_id' => $data->group_id ?: null,
-            'grupo' => $data->group_id ? $grupo->name: null,
+            'group_id' => $data->group_id,
+            'grupo' => $data->group_id ? $grupo->name : null,
             'creado' => $data->created_at,
             'favorito' => $data->favorite,
             'actualizado' => $data->updated_at,
@@ -53,6 +53,9 @@ class ContactTransformer extends TransformerAbstract
                 'update' => route('contacts.update', ['contact' => $data->id]),
                 'destroy' => route('contacts.destroy', ['contact' => $data->id]),
                 'favorite' => route('contacts.favorite', ['id' => $data->id]),
+                'phone' => route('contacts.phones.index', ['contact' => $data->id]),
+                'email' => route('contacts.emails.index', ['contact' => $data->id]),
+                'site' => route('contacts.apps.index', ['contact' => $data->id]),
             ],
         ];
     }
@@ -64,8 +67,8 @@ class ContactTransformer extends TransformerAbstract
             'apellido' => 'last_name',
             'direccion' => 'address',
             'empresa' => 'company',
-            'grupo' => 'group_id',
-            'favorito' => 'favorite'
+            'grupo_id' => 'group_id',
+            'favorito' => 'favorite',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -80,8 +83,8 @@ class ContactTransformer extends TransformerAbstract
             'last_name' => 'apellido',
             'address' => 'direccion',
             'company' => 'empresa',
-            'group_id' => 'grupo',
-            'favorite' => 'favorito'
+            'group_id' => 'grupo_id',
+            'favorite' => 'favorito',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -95,6 +98,7 @@ class ContactTransformer extends TransformerAbstract
             'apellido' => 'last_name',
             'direccion' => 'address',
             'empresa' => 'company',
+            'favorito' => 'favorite',
             'grupo_id' => 'group_id',
             'creado' => 'created_at',
             'actualizado' => 'updated_at',
