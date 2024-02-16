@@ -57,7 +57,7 @@ class ContactPhoneController extends Controller
             $phone->contact_id = $contact->id;
             $phone->save();
 
-            StorePhoneEvent::dispatch();
+            StorePhoneEvent::dispatch($this->user()->id);
         });
 
         return $this->showOne($phone, $phone->transformer, 201);
@@ -111,7 +111,7 @@ class ContactPhoneController extends Controller
             if ($updated) {
                 $phone->push();
 
-                UpdatePhoneEvent::dispatch();
+                UpdatePhoneEvent::dispatch($this->user()->id);
             }
 
         });
@@ -133,7 +133,7 @@ class ContactPhoneController extends Controller
 
         $phone->delete();
 
-        DestroyPhoneEvent::dispatch();
+        DestroyPhoneEvent::dispatch($this->user()->id);
 
         return $this->showOne($phone, $phone->transformer);
     }

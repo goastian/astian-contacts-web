@@ -59,7 +59,7 @@ class ContactEmailController extends Controller
             $email->contact_id = $contact->id;
             $email->save();
 
-            StoreEmailEvent::dispatch();
+            StoreEmailEvent::dispatch($this->user()->id);
         });
 
         return $this->showOne($email, $email->transformer, 201);
@@ -111,7 +111,7 @@ class ContactEmailController extends Controller
             if ($updated) {
                 $email->push();
 
-                UpdateEmailEvent::broadcast();
+                UpdateEmailEvent::dispatch($this->user()->id);
             }
 
         });
@@ -132,7 +132,7 @@ class ContactEmailController extends Controller
 
         $email->delete();
 
-        DestroyEmailEvent::dispatch();
+        DestroyEmailEvent::dispatch($this->user()->id);
 
         return $this->showOne($email, $email->transformer);
     }

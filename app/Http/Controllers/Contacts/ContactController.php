@@ -6,10 +6,14 @@ use App\Events\DestroyContactEvent;
 use App\Events\StoreContactEvent;
 use App\Events\UpdateContactEvent;
 use App\Http\Controllers\GlobalController as Controller;
+use App\Models\Contacts\App;
 use App\Models\Contacts\Contact;
+use App\Models\Contacts\Email;
 use App\Models\Contacts\Group;
+use App\Models\Contacts\Phone;
 use App\Transformers\Contacts\ContactTransformer;
 use Elyerr\ApiResponse\Exceptions\ReportError;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -53,7 +57,7 @@ class ContactController extends Controller
             'address' => ['max:150'],
             'company' => ['max:150'],
             'group_id' => [Rule::in($data)],
-            'favorite' => ['boolean']
+            'favorite' => ['boolean'],
         ]);
 
         DB::transaction(function () use ($request, $contact, $group) {
@@ -61,7 +65,7 @@ class ContactController extends Controller
             $contact->user_id = $this->user()->id;
             $contact->save();
 
-            StoreContactEvent::dispatch();
+            StoreContactEvent::dispatch($this->user()->id);
         });
 
         return $this->showOne($contact, $contact->transformer, 201);
@@ -101,6 +105,7 @@ class ContactController extends Controller
             'address' => ['max:150'],
             'company' => ['max:150'],
             'group_id' => [Rule::in($data)],
+            'favorite' => [Rule::in([0, 1, true, false])],
         ]);
 
         DB::transaction(function () use ($request, $contact) {
@@ -131,10 +136,15 @@ class ContactController extends Controller
                 $contact->group_id = $request->group_id;
             }
 
+            if ($this->is_diferent($contact->favorite, $request->favorite)) {
+                $updated = true;
+                $contact->favorite = $request->favorite;
+            }
+
             if ($updated) {
                 $contact->push();
 
-                UpdateContactEvent::dispatch();
+                UpdateContactEvent::dispatch($this->user()->id);
             }
 
         });
@@ -149,14 +159,33 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Contact $contact)
+    public function destroy(Contact $contact, Email $email, App $app, Group $group, Phone $phone)
     {
         throw_if($contact->user_id != $this->user()->id,
             new ReportError(__('Unauthorized user'), 403));
 
-        $contact->delete();
+        DB::transaction(function () use ($contact, $email, $app, $group, $phone) {
+            try {
+                DB::table($email->table)->where('contact_id', '=', $contact->id)->delete();
+            } catch (QueryException $e) {
+            }
 
-        DestroyContactEvent::dispatch();
+            try {
+                DB::table($app->table)->where('contact_id', '=', $contact->id)->delete();
+            } catch (QueryException $e) {
+            }
+
+            try {
+                DB::table($phone->table)->where('contact_id', '=', $contact->id)->delete();
+
+            } catch (QueryException $e) {
+
+            }
+
+            $contact->delete();
+
+            DestroyContactEvent::dispatch($this->user()->id);
+        });
 
         return $this->showOne($contact, $contact->transformer);
     }

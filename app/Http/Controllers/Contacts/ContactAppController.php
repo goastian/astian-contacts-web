@@ -58,7 +58,7 @@ class ContactAppController extends Controller
             $app->contact_id = $contact->id;
             $app->save();
 
-            StoreAppEvent::dispatch();
+            StoreAppEvent::dispatch($this->user()->id);
         });
 
         return $this->showOne($app, $app->transformer, 201);
@@ -112,7 +112,7 @@ class ContactAppController extends Controller
             if ($updated) {
                 $app->push();
 
-                UpdateAppEvent::dispatch();
+                UpdateAppEvent::dispatch($this->user()->id);
             }
 
         });
@@ -134,7 +134,7 @@ class ContactAppController extends Controller
 
         $app->delete();
 
-        DestroyAppEvent::dispatch();
+        DestroyAppEvent::dispatch($this->user()->id);
 
         return $this->showOne($app, $app->transformer);
     }

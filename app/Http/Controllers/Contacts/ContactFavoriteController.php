@@ -30,7 +30,7 @@ class ContactFavoriteController extends Controller
             $contact->favorite = !$contact->favorite;
             $contact->push();
 
-            UpdateContactEvent::dispatch();
+            UpdateContactEvent::dispatch($this->user()->id);
         });
 
         return $this->showOne($contact, $contact->transformer, 201);

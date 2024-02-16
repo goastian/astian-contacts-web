@@ -6,9 +6,11 @@ use App\Events\DestroyGroupEvent;
 use App\Events\StoreGroupEvent;
 use App\Events\UpdateGroupEvent;
 use App\Http\Controllers\GlobalController as Controller;
+use App\Models\Contacts\Contact;
 use App\Models\Contacts\Group;
 use App\Transformers\Contacts\GroupTransformer;
 use Elyerr\ApiResponse\Exceptions\ReportError;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -55,7 +57,7 @@ class GroupController extends Controller
             $group->user_id = $this->user()->id;
             $group->save();
 
-            StoreGroupEvent::dispatch();
+            StoreGroupEvent::dispatch($this->user()->id);
         });
 
         return $this->showOne($group, $group->transformer, 201);
@@ -98,7 +100,7 @@ class GroupController extends Controller
 
                 $group->push();
 
-                UpdateGroupEvent::dispatch();
+                UpdateGroupEvent::dispatch($this->user()->id);
             }
         });
 
@@ -111,14 +113,24 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Group $group)
+    public function destroy(Group $group, Contact $contact)
     {
         throw_if($group->user_id != $this->user()->id,
             new ReportError(__('Unauthorized user'), 403));
 
-        $group->delete();
+        DB::transaction(function () use ($group, $contact) {
 
-        DestroyGroupEvent::dispatch();
+            try {
+                DB::table($contact->table)->where('group_id', '=', $group->id)->update([
+                    'group_id' => null,
+                ]);
+
+            } catch (QueryException $e) {}
+
+            $group->delete();
+
+            DestroyGroupEvent::dispatch($this->user()->id);
+        });
 
         return $this->showOne($group, $group->transformer);
     }
