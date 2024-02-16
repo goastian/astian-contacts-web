@@ -47,23 +47,35 @@ class ContactController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Contact $contact, Group $group)
+    public function store(Request $request, Contact $contact, Group $group, Email $email, Phone $phone)
     {
         $data = $this->search($group->table, null, 'user_id', $this->user()->id)->pluck('id');
 
         $this->validate($request, [
             'name' => ['required', 'max:100'],
             'last_name' => ['required', 'max:100'],
+            'number' => ['required', 'max:20'],
+            'email' => ['required', 'email', 'max:100'],
             'address' => ['max:150'],
             'company' => ['max:150'],
             'group_id' => [Rule::in($data)],
             'favorite' => ['boolean'],
         ]);
 
-        DB::transaction(function () use ($request, $contact, $group) {
-            $contact = $contact->fill($request->all());
+        DB::transaction(function () use ($request, $contact, $phone, $email) {
+            $contact = $contact->fill($request->except('phone', 'email'));
             $contact->user_id = $this->user()->id;
             $contact->save();
+
+            $phone->name = "Personal";
+            $phone->number = $request->number;
+            $phone->contact_id = $contact->id;
+            $phone->save();
+
+            $email->name = "Personal";
+            $email->email = $request->email;
+            $email->contact_id = $contact->id;
+            $email->save();
 
             StoreContactEvent::dispatch($this->user()->id);
         });

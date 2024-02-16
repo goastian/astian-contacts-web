@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('phones', function (Blueprint $table) {
             $table->uuid('id')->unique();
             $table->string('name', 50);
-            $table->string('number', 20);
+            $table->string('number', 60);
             $table->uuid('contact_id');
             $table->primary('id');
         });

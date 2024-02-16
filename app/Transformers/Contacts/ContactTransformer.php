@@ -41,7 +41,7 @@ class ContactTransformer extends TransformerAbstract
             'apellido' => $data->last_name,
             'direccion' => $data->address,
             'empresa' => $data->company,
-            'group_id' => $data->group_id,
+            'grupo_id' => $data->group_id,
             'grupo' => $data->group_id ? $grupo->name : null,
             'creado' => $data->created_at,
             'favorito' => $data->favorite,
@@ -65,6 +65,8 @@ class ContactTransformer extends TransformerAbstract
         $attribute = [
             'nombre' => 'name',
             'apellido' => 'last_name',
+            'telefono' => 'number',
+            'correo' => 'email',
             'direccion' => 'address',
             'empresa' => 'company',
             'grupo_id' => 'group_id',
@@ -81,6 +83,8 @@ class ContactTransformer extends TransformerAbstract
         $attribute = [
             'name' => 'nombre',
             'last_name' => 'apellido',
+            'number' => 'telefono',
+            'email' => 'correo',
             'address' => 'direccion',
             'company' => 'empresa',
             'group_id' => 'grupo_id',
