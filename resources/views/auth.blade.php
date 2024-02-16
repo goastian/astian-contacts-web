@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
+    <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="icon" href="favicon.png" type="image/png">
 
     <link rel="stylesheet"
         href="{{ app()->environment('production') ? secure_asset('css/app.css') : asset('css/app.css') }}">
@@ -14,10 +15,10 @@
 
 </head>
 
-<body class="font-sans antialiased">
+<body>
 
     <div class="container">
-        <div class="card bg-dark text-light mt-5">
+        <div class="card mt-5">
             <div class="card-head mb-5 text-center fw-bold h1 text-secondary">
                 Iniciar Session Con
             </div>
