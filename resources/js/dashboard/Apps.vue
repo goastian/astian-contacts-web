@@ -6,10 +6,7 @@ const CALENDAR = process.env.MIX_MENU_CALENDAR;
 const CONTACTS = process.env.MIX_MENU_CONTACTS;
 const NOTES = process.env.MIX_MENU_NOTES;
 const OFFICE = process.env.MIX_MENU_OFFICE;
-const SYNC = process.env.MIX_MENU_SYNC;
-const DRIVE = process.env.MIX_MENU_DRIVE;
 const CHAT = process.env.MIX_MENU_CHAT;
-const SOCIAL = process.env.MIX_MENU_SOCIAL;
 </script>
 
 <template>
