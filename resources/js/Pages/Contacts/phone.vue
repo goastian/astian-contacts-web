@@ -136,7 +136,7 @@ export default {
                 .then((res) => {
                     this.errors = {};
                     this.phone = {};
-                    this.getPhones();
+                  //  this.getPhones();
                     this.button.disabled = false;
                 })
                 .catch((err) => {
@@ -168,7 +168,7 @@ export default {
                 .put(this.phone.links.update, this.phone)
                 .then((res) => {
                     this.phone_update = false;
-                    this.getPhones();
+                   // this.getPhones();
                     this.errors = {};
                     this.phone = {};
                     this.button.disabled = false;
@@ -191,7 +191,7 @@ export default {
                     this.button.disabled = false;
                     this.errors = {};
                     this.phone_update = false;
-                    this.getPhones();
+                    //this.getPhones();
                 })
                 .catch((err) => {
                     this.button.disabled = false;

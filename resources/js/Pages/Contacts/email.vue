@@ -134,7 +134,7 @@ export default {
                 .then((res) => {
                     this.errors = {};
                     this.email = {};
-                    this.getEmails();
+                 //   this.getEmails();
                     this.button.disabled = false;
                 })
                 .catch((err) => {
@@ -182,7 +182,7 @@ export default {
                 .then((res) => {
                     this.email_update = false;
                     this.errors = {};
-                    this.getEmails();
+                 //   this.getEmails();
                     this.email = {};
                     this.button.disabled = false;
                 })
@@ -205,7 +205,7 @@ export default {
             this.$host
                 .delete(link)
                 .then((res) => {
-                    this.getEmails();
+                //    this.getEmails();
                     this.errors = {};
                     this.email = {};
                     this.email_update = false;

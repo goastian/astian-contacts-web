@@ -1,13 +1,12 @@
 <template>
     <div class="row">
         <div class="col-12" v-show="registered">
-            <a
-                href="#"
+            <button
                 class="btn btn-secondary btn-sm float-end"
                 @click="destroyContact"
             >
                 Delete Contact <i class="bi bi-person-fill-x mx-2"></i>
-            </a>
+            </button>
         </div>
         <div class="col">
             <input
@@ -210,10 +209,10 @@ export default {
             this.message = false;
 
             if (this.registered) {
+                this.button.disabled = false;
                 this.$router.push({
                     name: "contacts",
                 });
-                this.button.disabled = false;
             } else {
                 this.contact.favorito = document.getElementById("favorito")
                     .checked

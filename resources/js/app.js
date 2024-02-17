@@ -29,6 +29,6 @@ $server
     })
     .catch((err) => {
         if (err.response && err.response.status == 401) {
-            console.log(err.response.data);
+            //console.log(err.response.data);
         }
     });

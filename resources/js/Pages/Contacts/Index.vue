@@ -1,13 +1,12 @@
 <template>
     <div class="row p-0 m-2">
         <v-contact @is-created="isRegistered"></v-contact>
-        
-        <v-email v-show="registered" class="my-4 pt-4 border-top"></v-email>
-        
-        <v-phone v-show="registered" class="my-4 pt-4 border-top"></v-phone>
-        
-        <v-sites v-show="registered" class="my-4 pt-4 border-top"></v-sites>
 
+        <v-email v-show="registered" class="my-4 pt-4 border-top"></v-email>
+
+        <v-phone v-show="registered" class="my-4 pt-4 border-top"></v-phone>
+
+        <v-sites v-show="registered" class="my-4 pt-4 border-top"></v-sites>
     </div>
 </template>
 <script>
@@ -26,9 +25,6 @@ export default {
 
     data() {
         return {
-            contact: {},
-            contacts: {},
-            errors: {},
             registered: false,
         };
     },
@@ -37,86 +33,20 @@ export default {
         this.registered = false;
         if (this.$route.params.id) {
             this.registered = true;
-            this.showContact(this.$route.params.id);
         }
     },
 
     watch: {
         $route(to, from) {
             if (!to.params.id) {
-                this.contact = {};
-                this.errors = {};
                 this.registered = false;
             }
         },
     },
 
     methods: {
-        showContact(id) {
-            this.$host
-                .get("/api/contacts/" + id)
-                .then((res) => {
-                    this.contact = res.data.data;
-                    this.getEmails();
-                })
-                .catch((err) => {
-                    if (err.response && err.response.status) {
-                        this.errors = err.response.data.errors;
-                    }
-                });
-        },
-
-        createContact() {
-            this.$host
-                .post("/api/contacts", this.contact)
-                .then((res) => {
-                    this.contact = res.data.data;
-                    this.$router.push({
-                        name: "contacts",
-                        params: { id: this.contact.id },
-                    });
-
-                    this.registered = true;
-                    this.errors = {};
-                })
-                .catch((err) => {
-                    if (err.response && err.response.status) {
-                        this.errors = err.response.data.errors;
-                    }
-                });
-        },
-
-        isRegistered(event){ 
-            this.registered = event
-        },
-
-        updateContact(link) {
-            this.$host
-                .put(link, this.contact)
-                .then((res) => {
-                    this.registered = true;
-                    this.errors = {};
-                })
-                .catch((err) => {
-                    if (err.response && err.response.status) {
-                        this.errors = err.response.data.errors;
-                    }
-                });
-        },
-
-        destroyContact() {
-            this.$host
-                .delete(link)
-                .then((res) => {
-                    this.registered = false;
-                    this.errors = {};
-                    this.$router.push({ name: "contacts" });
-                })
-                .catch((err) => {
-                    if (err.response && err.response.status) {
-                        console.log(err.response);
-                    }
-                });
+        isRegistered(event) {
+            this.registered = event;
         },
 
         listenEvents() {},
