@@ -69,7 +69,7 @@ const CHAT = process.env.MIX_MENU_CHAT;
                         <div class="col">
                             <a :href="NOTES" class="btn btn-link">
                                 <span>Notes</span>
-                                <i class="bi bi-floppy-fill"> </i>
+                                <i class="bi bi-journal-bookmark-fill"></i>
                             </a>
                         </div>
                         <div class="col">
