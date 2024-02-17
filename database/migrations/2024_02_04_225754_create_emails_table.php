@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('emails', function (Blueprint $table) {
-            $table->uuid('id')->unique();
+            $table->uuid('id')->unique()->index();
             $table->string('name', 100);
             $table->string('email', 100);
-            $table->uuid('contact_id');
+            $table->uuid('contact_id')->index();
             $table->primary('id');
         });
     }

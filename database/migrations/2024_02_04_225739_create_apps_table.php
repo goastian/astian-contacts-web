@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('apps', function (Blueprint $table) {
-            $table->uuid('id')->unique();
+            $table->uuid('id')->unique()->index();
             $table->string('name', 50);
             $table->string('uri');
-            $table->uuid('contact_id');
+            $table->uuid('contact_id')->index();
             $table->primary('id');
         });
     }
