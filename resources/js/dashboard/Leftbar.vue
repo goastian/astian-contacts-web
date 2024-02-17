@@ -27,9 +27,10 @@
         <ul class="contacts" v-show="show_contacts">
             <li v-for="(item, index) in contacts" :key="index">
                 <a href="#" class="text-color" @click="showContact(item.id)">
-                    <i class="bi bi-record-circle-fill mx-2"></i>
+                    <i class="bi bi-person-lines-fill mx-2"></i>
                     {{ item.nombre }} {{ item.apellido }}
-                    <i v-show="item.favorito" class="bi bi-heart mx-2"></i>
+                    <i v-show="item.favorito" class="bi bi-star-fill mx-2"></i>
+                    
                 </a>
             </li>
         </ul>

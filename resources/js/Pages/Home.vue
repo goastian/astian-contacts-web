@@ -31,8 +31,11 @@
             </div>
         </div>
     </div>
-
-    <v-pagination :pages="pages" @changed-page="getContacts"></v-pagination>
+    <v-pagination
+        v-show="pages.total > pages.per_page"
+        :pages="pages"
+        @changed-page="getContacts"
+    ></v-pagination>
 </template>
 <script>
 export default {
@@ -40,7 +43,7 @@ export default {
         return {
             contacts: {},
             form: {
-                per_page: 50,
+                per_page: 25,
                 page: 1,
             },
             pages: {},

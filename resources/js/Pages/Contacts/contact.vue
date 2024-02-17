@@ -27,20 +27,50 @@
             />
             <v-error :error="errors.apellido"></v-error>
         </div>
+        <div class="col" v-show="!registered">
+            <input
+                type="text"
+                class="form-control form-control-sm text-color"
+                placeholder="Email Address"
+                v-model="contact.correo"
+            />
+            <v-error :error="errors.correo"></v-error>
+        </div>
+
+        <div class="col" v-show="!registered">
+            <input
+                type="text"
+                class="form-control form-control-sm text-color"
+                placeholder="Number phone"
+                v-model="contact.telefono"
+            />
+            <v-error :error="errors.telefono"></v-error>
+        </div>
+
         <div class="col">
             <input
                 type="text"
                 class="form-control form-control-sm text-color"
-                placeholder="Address"
+                placeholder="Home Address"
                 v-model="contact.direccion"
             />
             <v-error :error="errors.direccion"></v-error>
         </div>
         <div class="col">
-            <label class="text-color">Group</label>
-            {{ contact.grupo_id }}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="favorito" />
+                <label class="form-check-label text-color" for="favorite">
+                    Mark as favorite
+                </label>
+            </div>
+
+            <v-error :error="errors.favorite"></v-error>
+        </div>
+        <div class="col">
+            <label class="text-color">Choose group ...</label>
             <select
-                class="form-control form-control-sm text-color"
+                class="form-select form-select-sm text-color"
+                aria-label="Choose group"
                 v-model="contact.grupo_id"
             >
                 <option
@@ -53,31 +83,25 @@
             </select>
             <v-error :error="errors.grupo_id"></v-error>
         </div>
-        <div class="col">
-            <label class="text-color" for="">Favorite</label>
-            <select
-                class="form-control form-control-sm text-color"
-                v-model="contact.favorito"
-            >
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-            </select>
-            <v-error :error="errors.favorite"></v-error>
-        </div>
+
         <div class="col-12 mt-3">
-            <a
-                href="#"
+            <button
                 class="btn btn-sm btn-ternary mx-2"
                 v-show="registered"
                 @click="updateContact"
-                >Update Contact
+            >
+                Update Contact
                 <i class="bi bi-person-circle"></i>
-            </a>
-            <a href="#" class="btn btn-primary btn-sm" @click="createContact"
-                >New Contact
+            </button>
+            <button
+                href="#"
+                class="btn btn-primary btn-sm"
+                @click="createContact"
+            >
+                New Contact
 
-                <i class="bi bi-person-fill-add mx-2"></i
-            ></a>
+                <i class="bi bi-person-fill-add mx-2"></i>
+            </button>
         </div>
         <div class="col-12 mt-2">
             <span v-show="message" class="mx-2 text-color">{{ message }}</span>
@@ -85,6 +109,8 @@
     </div>
 </template>
 <script>
+import { Button } from "bootstrap";
+
 export default {
     emits: ["isCreated"],
 
@@ -96,6 +122,7 @@ export default {
             groups: {},
             registered: false,
             message: false,
+            button: null,
         };
     },
 
@@ -128,11 +155,21 @@ export default {
     },
 
     methods: {
+        /**
+         * Show info about the contact
+         *
+         * @param {*} id
+         */
         showContact(id) {
+            
             this.$host
                 .get("/api/contacts/" + id)
                 .then((res) => {
                     this.contact = res.data.data;
+                    this.errors = {}
+
+                    document.getElementById("favorito").checked =
+                        this.contact.favorito == 1 ? true : false;
                 })
                 .catch((err) => {
                     if (err.response && err.response.status) {
@@ -141,6 +178,9 @@ export default {
                 });
         },
 
+        /**
+         * get groups belongs to the user authenticable
+         */
         getGroups() {
             this.$host
                 .get("/api/groups", {
@@ -159,14 +199,27 @@ export default {
                 });
         },
 
-        createContact() {
+        /**
+         * create a new contanct
+         */
+        createContact(event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
+            //reset varaible message
             this.message = false;
 
             if (this.registered) {
                 this.$router.push({
                     name: "contacts",
                 });
+                this.button.disabled = false;
             } else {
+                this.contact.favorito = document.getElementById("favorito")
+                    .checked
+                    ? 1
+                    : 0;
+
                 this.$host
                     .post("/api/contacts", this.contact)
                     .then((res) => {
@@ -178,10 +231,11 @@ export default {
 
                         this.registered = true;
                         this.errors = {};
-
+                        this.button.disabled = false;
                         this.$emit("isCreated", true);
                     })
                     .catch((err) => {
+                        this.button.disabled = false;
                         if (err.response && err.response.status) {
                             this.errors = err.response.data.errors;
                         }
@@ -189,7 +243,13 @@ export default {
             }
         },
 
-        updateContact() {
+        /**
+         * update contact
+         */
+        updateContact(event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.message = false;
 
             this.$host
@@ -201,15 +261,20 @@ export default {
                     this.showContact(this.$route.params.id);
 
                     this.message = "The contact information has been updated.";
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status) {
                         this.errors = err.response.data.errors;
                     }
                 });
         },
 
-        destroyContact() {
+        destroyContact(event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.$host
                 .delete(this.contact.links.destroy)
                 .then((res) => {
@@ -217,8 +282,10 @@ export default {
                     this.errors = {};
                     this.contact = {};
                     this.$router.push({ name: "contacts" });
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status) {
                         console.log(err.response);
                     }

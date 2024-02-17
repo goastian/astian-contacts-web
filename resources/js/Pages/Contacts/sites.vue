@@ -54,7 +54,7 @@
                 </button>
                 <button
                     class="btn btn btn-sm btn-secondary"
-                    @click="destroySite(item.links.destroy)"
+                    @click="destroySite(item.links.destroy, $event)"
                 >
                     <i class="bi bi-trash text-color"></i>
                 </button>
@@ -71,6 +71,7 @@ export default {
             errors: {},
             site_update: false,
             site_request: null,
+            button: null,
         };
     },
 
@@ -125,7 +126,10 @@ export default {
                 });
         },
 
-        addSite() {
+        addSite(event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.getUri();
             this.$host
                 .post(this.site_request, this.site)
@@ -133,8 +137,10 @@ export default {
                     this.errors = {};
                     this.site = {};
                     this.getSites();
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status) {
                         this.errors = err.response.data.errors;
                     }
@@ -154,29 +160,39 @@ export default {
                 });
         },
 
-        updateSite() {
+        updateSite(event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.$host
                 .put(this.site.links.update, this.site)
                 .then((res) => {
                     (this.site_update = false), (this.errors = {});
                     this.site = {};
                     this.getSites();
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status) {
                         this.errors = err.response.data.errors;
                     }
                 });
         },
 
-        destroySite(link) {
+        destroySite(link, event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.$host
                 .delete(link)
                 .then((res) => {
                     this.site_update = false;
                     this.getSites();
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status) {
                         console.log(err.response);
                     }

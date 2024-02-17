@@ -2,11 +2,12 @@
     <div class="row p-0 m-2">
         <v-contact @is-created="isRegistered"></v-contact>
         
+        <v-email v-show="registered" class="my-4 pt-4 border-top"></v-email>
+        
+        <v-phone v-show="registered" class="my-4 pt-4 border-top"></v-phone>
+        
         <v-sites v-show="registered" class="my-4 pt-4 border-top"></v-sites>
 
-        <v-phone v-show="registered" class="my-4 pt-4 border-top"></v-phone>
-
-        <v-email v-show="registered" class="my-4 pt-4 border-top"></v-email>
     </div>
 </template>
 <script>

@@ -10,25 +10,23 @@
             <v-error :error="errors.grupo"></v-error>
         </div>
         <div class="col">
-            <a
-                href="#"
+            <button
                 class="btn btn-primary"
                 v-show="!group_update"
                 @click="createGroup"
             >
                 Add Group
                 <i class="bi bi-collection"></i>
-            </a>
+            </button>
 
-            <a
-                href="#"
+            <button
                 v-show="group_update"
                 class="btn btn-primary btn-ternary"
-                @click="updateGroup()"
+                @click="updateGroup"
             >
                 Change Group Name
-                <i class="bi bi-cloud-upload mx-2"></i
-            ></a>
+                <i class="bi bi-cloud-upload mx-2"></i>
+            </button>
         </div>
         <div class="col-12">
             <p class="list-title text-color border-bottom">List group</p>
@@ -39,14 +37,14 @@
             >
                 <button
                     class="btn btn-primary btn-sm mx-2"
-                    @click="update(item)"
+                    @click="update(item, $event)"
                 >
                     <i class="bi bi-pencil-square"></i>
                 </button>
                 {{ item.grupo }}
                 <button
                     class="btn btn-secondary btn-sm mx-2"
-                    @click="destroyGroup(item)"
+                    @click="destroyGroup(item, $event)"
                 >
                     <i class="bi bi-trash"></i>
                 </button>
@@ -62,6 +60,7 @@ export default {
             groups: {},
             errors: {},
             group_update: false,
+            button: null,
         };
     },
 
@@ -74,15 +73,19 @@ export default {
     },
 
     methods: {
-        createGroup() {
-            document.getElementsByClassName("btn").disabled = true;
+        createGroup(event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.$host
                 .post("/api/groups", this.group)
                 .then((res) => {
                     this.getGroups();
                     this.group = {};
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status == 422) {
                         this.errors = err.response.data.errors;
                     }
@@ -112,7 +115,10 @@ export default {
             this.group = item;
         },
 
-        updateGroup() {
+        updateGroup(event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.$host
                 .put(this.group.links.update, this.group)
                 .then((res) => {
@@ -120,23 +126,31 @@ export default {
                     this.errors = {};
                     this.group_update = false;
                     this.getGroups();
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status == 422) {
                         this.errors = err.response.data.errors;
                     }
                 });
         },
 
-        destroyGroup(item) {
+        destroyGroup(item, event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.$host
                 .delete(item.links.destroy)
                 .then((res) => {
                     this.errors = {};
                     this.group_update = false;
                     this.getGroups();
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
+
                     if (err.response && err.response.status == 422) {
                         this.errors = err.response.data.errors;
                     }

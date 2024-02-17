@@ -83,3 +83,11 @@
     color: var(--secondary);
     font-size: var(--font-size);
 }
+
+.btn:hover {
+    font-weight: bolder !important;
+}
+
+.btn i:hover {
+    font-weight: bolder !important;
+}

@@ -21,7 +21,7 @@
         <div class="col">
             <button
                 class="btn btn-primary btn-sm"
-                @click="addEmail()"
+                @click="addEmail"
                 v-show="!email_update"
             >
                 Add email <i class="bi bi-envelope-at mx-2"></i>
@@ -29,7 +29,7 @@
 
             <button
                 class="btn btn-ternary btn-sm"
-                @click="updateEmail()"
+                @click="updateEmail"
                 v-show="email_update"
             >
                 Update email <i class="bi bi-envelope-at mx-2"></i>
@@ -51,7 +51,7 @@
                 </button>
                 <button
                     class="btn btn btn-sm btn-secondary"
-                    @click="destroyEmail(item.links.destroy)"
+                    @click="destroyEmail(item.links.destroy, $event)"
                 >
                     <i class="bi bi-trash text-color"></i>
                 </button>
@@ -68,6 +68,7 @@ export default {
             errors: {},
             email_update: false,
             email_request: null,
+            button: null,
         };
     },
 
@@ -122,7 +123,10 @@ export default {
         /**
          * create a new email to the current contact
          */
-        addEmail() {
+        addEmail(event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.getUri();
 
             this.$host
@@ -131,10 +135,12 @@ export default {
                     this.errors = {};
                     this.email = {};
                     this.getEmails();
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
                     if (err.response && err.response.status == 422) {
                         this.errors = err.response.data.errors;
+                        this.button.disabled = false;
                     }
                 });
         },
@@ -167,7 +173,10 @@ export default {
         /**
          * update the current email user
          */
-        updateEmail() {
+        updateEmail(event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.$host
                 .put(this.email.links.update, this.email)
                 .then((res) => {
@@ -175,8 +184,10 @@ export default {
                     this.errors = {};
                     this.getEmails();
                     this.email = {};
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status) {
                         this.errors = err.response.data.errors;
                     }
@@ -187,7 +198,10 @@ export default {
          * destroy de current email user
          * @param {*} link
          */
-        destroyEmail(link) {
+        destroyEmail(link, event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.$host
                 .delete(link)
                 .then((res) => {
@@ -195,8 +209,10 @@ export default {
                     this.errors = {};
                     this.email = {};
                     this.email_update = false;
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status) {
                         console.log(err.response);
                     }

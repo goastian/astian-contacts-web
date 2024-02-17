@@ -22,7 +22,7 @@
             <button
                 class="btn btn-primary btn-sm"
                 v-show="!phone_update"
-                @click="addPhone()"
+                @click="addPhone"
             >
                 Add phone
                 <i class="bi bi-telephone-plus-fill mx-2"></i>
@@ -31,7 +31,7 @@
             <button
                 class="btn btn-ternary btn-sm"
                 v-show="phone_update"
-                @click="updatePhone()"
+                @click="updatePhone"
             >
                 Update phone
                 <i class="bi bi-telephone-plus-fill mx-2"></i>
@@ -53,8 +53,8 @@
                     <i class="bi bi-pencil-square text-color"></i>
                 </button>
                 <button
-                    class="btn btn btn-sm btn-secondary btn-sm"
-                    @click="destroyPhone(item.links.destroy)"
+                    class="btn btn-sm btn-secondary btn-sm"
+                    @click="destroyPhone(item.links.destroy, $event)"
                 >
                     <i class="bi bi-trash text-color"></i>
                 </button>
@@ -125,7 +125,10 @@ export default {
                 });
         },
 
-        addPhone() {
+        addPhone(event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.getUri();
 
             this.$host
@@ -134,8 +137,10 @@ export default {
                     this.errors = {};
                     this.phone = {};
                     this.getPhones();
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status) {
                         this.errors = err.response.data.errors;
                     }
@@ -156,6 +161,9 @@ export default {
         },
 
         updatePhone() {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.$host
                 .put(this.phone.links.update, this.phone)
                 .then((res) => {
@@ -163,23 +171,30 @@ export default {
                     this.getPhones();
                     this.errors = {};
                     this.phone = {};
+                    this.button.disabled = false;
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status) {
                         this.errors = err.response.data.errors;
                     }
                 });
         },
 
-        destroyPhone(link) {
+        destroyPhone(link, event) {
+            this.button = event.target;
+            this.button.disabled = true;
+
             this.$host
                 .delete(link)
                 .then((res) => {
+                    this.button.disabled = false;
                     this.errors = {};
                     this.phone_update = false;
                     this.getPhones();
                 })
                 .catch((err) => {
+                    this.button.disabled = false;
                     if (err.response && err.response.status) {
                         console.log(err.response);
                     }
