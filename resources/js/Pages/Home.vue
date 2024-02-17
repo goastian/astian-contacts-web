@@ -1,4 +1,16 @@
 <template>
+    <div class="add text-color" v-show="!pages.total">
+        <div class="add-head">Do you want to keep save your contacts?</div>
+        <div class="add-body">
+            <button class="btn btn-lg" @click="addContacts">
+                <i class="bi bi-journal-plus"></i>
+            </button>
+        </div>
+        <div class="add-footer text-center">
+            Keep your contacts saved and get it them any moment and anywhere.
+        </div>
+    </div>
+
     <div class="row p-0 m-2">
         <div
             class="card text-color text-center"
@@ -55,6 +67,11 @@ export default {
     },
 
     methods: {
+
+        addContacts(){
+            this.$router.push({name:'contacts'})
+        }, 
+
         showContact(id) {
             this.$router.push({ name: "contacts", params: { id: id } });
         },
@@ -78,6 +95,29 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.add {
+    width: 50% !important;
+    margin: 5% auto;
+}
+
+.add-head {
+    text-align: center;
+}
+
+.add-body {
+    font-weight: bold;
+    text-align: center;
+}
+
+.add-body .btn:hover {
+    font-weight: bold;
+    color: var(--seconday);
+}
+
+.add-body .bi {
+    font-size: 5rem;
+}
+
 .card {
     flex: 0 0 auto;
     margin-right: 1%;
