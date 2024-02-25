@@ -26,21 +26,26 @@
 
         <ul class="contacts" v-show="show_contacts">
             <li v-for="(item, index) in contacts" :key="index">
-                <a href="#" class="text-color" @click="showContact(item.id)">
+                <router-link
+                    :to="{ name: 'contacts', params: { id: item.id } }"
+                    @click="isClicked"
+                >
                     <i class="bi bi-person-lines-fill mx-2"></i>
                     {{ item.nombre }} {{ item.apellido }}
                     <i v-show="item.favorito" class="bi bi-star-fill mx-2"></i>
-                    
-                </a>
+                </router-link>
             </li>
         </ul>
 
         <ul class="favorites" v-show="show_favorites">
             <li v-for="(item, index) in favorites" :key="index">
-                <a href="#" class="text-color" @click="showContact(item.id)">
+                <router-link
+                    :to="{ name: 'contacts', params: { id: item.id } }"
+                    @click="isClicked"
+                >
                     <i class="bi bi-heart mx-2"></i>
                     {{ item.nombre }} {{ item.apellido }}
-                </a>
+                </router-link>
             </li>
         </ul>
 
@@ -92,11 +97,6 @@ export default {
             if (window.innerWidth < 940) {
                 this.$emit("selectedMenu", window.innerWidth < 940);
             }
-        },
-
-        showContact(id) {
-            this.$router.push({ name: "contacts", params: { id: id } });
-            this.isClicked();
         },
 
         getContacts() {
@@ -201,10 +201,8 @@ export default {
 
 <style scoped lang="scss">
 .side {
-    padding-top: 3%;
-    height: 100vh;
-    color: var(--dark);
-    background-color: var(--white);
+    width: 100%;
+    min-height: 100vh;
 }
 
 .side ul:nth-child(1) {

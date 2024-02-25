@@ -1,10 +1,12 @@
 <template>
     <div class="row p-0 m-0">
         <v-nav @expand="taggleLefbar" :status="toggle_lef_bar"></v-nav>
-        <div class="left" v-show="!toggle_lef_bar">
+        <div class="left bg-light" v-show="!toggle_lef_bar">
             <v-left-bar @selected-menu="taggleLefbar"></v-left-bar>
         </div>
-        <div :class="[toggle_lef_bar ? 'body-expand' : 'body']">
+        <div
+            :class="['pt-2 content', [toggle_lef_bar ? 'body-expand' : 'body']]"
+        >
             <router-view></router-view>
         </div>
     </div>
@@ -35,10 +37,9 @@ export default {
 
 <style scoped lang="scss">
 .left {
-    flex: 0 0 auto;
     overflow-y: scroll;
+    min-height: 100vh;
     padding: 0;
-    margin: 0;
 
     @media (min-width: 240px) {
         width: 100%;
@@ -46,29 +47,25 @@ export default {
 
     @media (min-width: 850px) {
         width: 20%;
-        height: 100vh;
     }
 }
 
-.body {
-    flex: 0 0 auto;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
+.content {
+    overflow-y: auto;
+    min-height: 100vh; 
+}
 
+.body {
     @media (min-width: 240px) {
         width: 100%;
     }
 
     @media (min-width: 800px) {
-        width: 80%;
+        width: 84%;
     }
 }
 
 .body-expand {
-    flex: 0 0 auto;
     width: 100%;
-    height: 100vh;
-    overflow-y: scroll;
 }
 </style>

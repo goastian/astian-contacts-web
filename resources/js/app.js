@@ -6,7 +6,7 @@ import { components } from "./config/globalComponents";
 
 import App from "./App.vue";
 import Login from "./Login/Login.vue";
-import './config/matomo'
+import "./config/matomo";
 
 //bootstrap
 import * as bootstrap from "bootstrap";
@@ -22,7 +22,11 @@ router.beforeEach((to, from, next) => {
         $server
             .get("/api/gateway/check-authentication")
             .then((res) => {
-                next();
+                if (window.location.pathname == "/login") {
+                    window.location.href = process.env.MIX_APP_URL;
+                } else {
+                    next();
+                }
             })
             .catch((err) => {
                 /**
@@ -45,9 +49,9 @@ $server
     .get("/api/gateway/user")
     .then((res) => {
         /**
-         * Global User Authenticated user
+         * Global User id from authenticated user
          */
-        window.$auth = res.data;
+        window.$id = res.data.id;
 
         /**
          * Creating the Vue App

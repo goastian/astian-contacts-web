@@ -67,13 +67,16 @@ export default {
     },
 
     methods: {
-
-        addContacts(){
-            this.$router.push({name:'contacts'})
-        }, 
+        addContacts() {
+            this.$router.push({ name: "contacts" });
+        },
 
         showContact(id) {
-            this.$router.push({ name: "contacts", params: { id: id } });
+            this.$router.push({
+                name: "contacts",
+                params: { id: id },
+                replace: true,
+            });
         },
 
         getContacts(id) {
@@ -87,7 +90,6 @@ export default {
                 })
                 .catch((err) => {
                     if (err.response) {
-                        console.log(err.response);
                     }
                 });
         },

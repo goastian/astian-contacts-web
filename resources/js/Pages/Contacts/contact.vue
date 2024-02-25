@@ -58,7 +58,7 @@
         <div class="col">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="favorito" />
-                <label class="form-check-label text-color" for="favorite">
+                <label class="form-check-label text-color" for="favorito">
                     Mark as favorite
                 </label>
             </div>
@@ -108,8 +108,6 @@
     </div>
 </template>
 <script>
-import { Button } from "bootstrap";
-
 export default {
     emits: ["isCreated"],
 
@@ -160,12 +158,11 @@ export default {
          * @param {*} id
          */
         showContact(id) {
-            
             this.$host
                 .get("/api/contacts/" + id)
                 .then((res) => {
                     this.contact = res.data.data;
-                    this.errors = {}
+                    this.errors = {};
 
                     document.getElementById("favorito").checked =
                         this.contact.favorito == 1 ? true : false;
@@ -214,10 +211,8 @@ export default {
                     name: "contacts",
                 });
             } else {
-                this.contact.favorito = document.getElementById("favorito")
-                    .checked
-                    ? 1
-                    : 0;
+                this.contact.favorito =
+                    document.getElementById("favorito").checked;
 
                 this.$host
                     .post("/api/contacts", this.contact)
@@ -250,6 +245,7 @@ export default {
             this.button.disabled = true;
 
             this.message = false;
+            this.contact.favorito = document.getElementById("favorito").checked;
 
             this.$host
                 .put(this.contact.links.update, this.contact)
@@ -292,24 +288,6 @@ export default {
         },
 
         listenEvents() {
-            /* this.$echo
-                .private(this.$channels.ch_1(window.$id))
-                .listen("StoreContactEvent", (e) => {
-                    this.getContacts();
-                });
-
-            this.$echo
-                .private(this.$channels.ch_1(window.$id))
-                .listen("UpdateContactEvent", (e) => {
-                    this.getContacts();
-                });
-
-            this.$echo
-                .private(this.$channels.ch_1(window.$id))
-                .listen("DestroyContactEvent", (e) => {
-                    this.getContacts();
-                });*/
-
             this.$echo
                 .private(this.$channels.ch_1(window.$id))
                 .listen("StoreGroupEvent", (res) => {

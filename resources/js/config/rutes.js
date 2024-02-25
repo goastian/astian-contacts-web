@@ -5,7 +5,12 @@ import VContact from "../Pages/Contacts/Index.vue";
 import VGroup from "../Pages/Group.vue";
 
 const routes = [
-    { path: "/:group?", name: "home", component: Home, meta: { auth: true } },
+    {
+        path: "/:group?",
+        name: "home",
+        component: Home,
+        meta: { auth: true },
+    },
     {
         path: "/contacts/:id?",
         name: "contacts",
