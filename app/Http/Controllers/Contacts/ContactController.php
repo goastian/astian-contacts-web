@@ -116,8 +116,8 @@ class ContactController extends Controller
             'last_name' => ['max:100'],
             'address' => ['max:150'],
             'company' => ['max:150'],
-            'group_id' => [Rule::in($data)],
-            'favorite' => [Rule::in([0, 1, true, false])],
+            'group_id' => ['nullable', Rule::in($data)],
+            'favorite' => ['boolean'],
         ]);
 
         DB::transaction(function () use ($request, $contact) {
@@ -148,7 +148,7 @@ class ContactController extends Controller
                 $contact->group_id = $request->group_id;
             }
 
-            if ($this->is_diferent($contact->favorite, $request->favorite)) {
+            if ($contact->favorite != $request->favorite) {
                 $updated = true;
                 $contact->favorite = $request->favorite;
             }
