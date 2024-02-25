@@ -80,7 +80,7 @@ export default {
             this.$host
                 .post("/api/groups", this.group)
                 .then((res) => {
-                   // this.getGroups();
+                    this.getGroups();
                     this.group = {};
                     this.button.disabled = false;
                 })
@@ -125,7 +125,7 @@ export default {
                     this.group = {};
                     this.errors = {};
                     this.group_update = false;
-                  //  this.getGroups();
+                    this.getGroups();
                     this.button.disabled = false;
                 })
                 .catch((err) => {
@@ -145,7 +145,7 @@ export default {
                 .then((res) => {
                     this.errors = {};
                     this.group_update = false;
-                  //  this.getGroups();
+                    this.getGroups();
                     this.button.disabled = false;
                 })
                 .catch((err) => {

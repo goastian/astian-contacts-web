@@ -136,7 +136,7 @@ export default {
                 .then((res) => {
                     this.errors = {};
                     this.site = {};
-                 //   this.getSites();
+                    this.getSites();
                     this.button.disabled = false;
                 })
                 .catch((err) => {
@@ -169,7 +169,7 @@ export default {
                 .then((res) => {
                     (this.site_update = false), (this.errors = {});
                     this.site = {};
-                //    this.getSites();
+                    this.getSites();
                     this.button.disabled = false;
                 })
                 .catch((err) => {
@@ -188,13 +188,12 @@ export default {
                 .delete(link)
                 .then((res) => {
                     this.site_update = false;
-                  //  this.getSites();
+                    this.getSites();
                     this.button.disabled = false;
                 })
                 .catch((err) => {
                     this.button.disabled = false;
                     if (err.response && err.response.status) {
-                        console.log(err.response);
                     }
                 });
         },

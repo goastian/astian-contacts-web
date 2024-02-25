@@ -237,7 +237,13 @@ export default {
 }
 
 .nav-item {
-    margin-right: 2%;
+    @media (min-width: 240px) {
+        margin-right: 0%;
+    }
+
+    @media (min-width: 800px) {
+        margin-right: 2%;
+    }
 }
 
 .dropdown-item img {

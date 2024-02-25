@@ -6,36 +6,72 @@ import { components } from "./config/globalComponents";
 
 import App from "./App.vue";
 import Login from "./Login/Login.vue";
+import './config/matomo'
 
 //bootstrap
 import * as bootstrap from "bootstrap";
 
-//Starting App
+/**
+ * Cheking routes
+ */
+router.beforeEach((to, from, next) => {
+    if (to.meta.auth) {
+        /**
+         * if the user is authenticated
+         */
+        $server
+            .get("/api/gateway/check-authentication")
+            .then((res) => {
+                next();
+            })
+            .catch((err) => {
+                /**
+                 * authenticated redirect to the login
+                 */
+                window.location.href = "/login";
+            });
+    } else {
+        /**
+         * is no auth route go to next() request
+         */
+        next();
+    }
+});
+
+/**
+ * Mounting App depending if the user is or not Authenticalble
+ */
 $server
     .get("/api/gateway/user")
     .then((res) => {
-        //Start authenticable user
+        /**
+         * Global User Authenticated user
+         */
         window.$auth = res.data;
 
-        if (window.location.pathname == "/login") {
-            window.location.href = process.env.MIX_APP_URL;
-        }
-
-        //init app
+        /**
+         * Creating the Vue App
+         */
         const app = createApp(App);
 
-        //global properties
+        /**
+         * Global properties for vuejs
+         */
         app.config.globalProperties.$server = $server;
         app.config.globalProperties.$host = $host;
         app.config.globalProperties.$echo = $echo;
         app.config.globalProperties.$channels = $channels;
 
-        //global components
+        /**
+         * Global components for Vuejs
+         */
         components.forEach((index) => {
             app.component(index[0], index[1]);
         });
 
-        //use vue router
+        /**
+         * User routes using VUeRouter
+         */
         app.use(router);
 
         app.mount("#app");
