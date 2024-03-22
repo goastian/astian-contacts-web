@@ -1,26 +1,28 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Home from "../Pages/Home.vue";
-import VContact from "../Pages/Contacts/Index.vue";
-import VGroup from "../Pages/Group.vue";
-
 const routes = [
+    {
+        path: "/login",
+        name: "login",
+        component: () => import("../Login/Login.vue"),
+        meta: { auth: false },
+    },
     {
         path: "/:group?",
         name: "home",
-        component: Home,
+        component: () => import("../Pages/Home.vue"),
         meta: { auth: true },
     },
     {
         path: "/contacts/:id?",
         name: "contacts",
-        component: VContact,
+        component: () => import("../Pages/Contacts/Index.vue"),
         meta: { auth: true },
     },
     {
         path: "/groups/:id?",
         name: "groups",
-        component: VGroup,
+        component: () => import("../Pages/Group.vue"),
         meta: { auth: true },
     },
     ,
