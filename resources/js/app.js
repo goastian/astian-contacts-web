@@ -4,84 +4,80 @@ import { $echo, $channels } from "./config/echo";
 import { router } from "./config/rutes";
 import { components } from "./config/globalComponents";
 
-import App from "./App.vue";
-import Login from "./Login/Login.vue";
+import App from "./App.vue"; 
 import "./config/matomo";
 
 //bootstrap
 import * as bootstrap from "bootstrap";
 
 /**
- * Cheking routes
+ * Cheking Routes from VueRouter
  */
 router.beforeEach((to, from, next) => {
-    if (to.meta.auth) {
-        /**
-         * if the user is authenticated
-         */
-        $server
-            .get("/api/gateway/check-authentication")
-            .then((res) => {
-                if (window.location.pathname == "/login") {
-                    window.location.href = process.env.MIX_APP_URL;
-                } else {
-                    next();
-                }
-            })
-            .catch((err) => {
+    /**
+     * checking for valid credentials
+     */
+    $server
+        .get("/api/gateway/check-authentication")
+        .then((res) => {
+            /**
+             * Checking if the route is auth
+             */
+            if (to.meta.auth) {
+                next();
+            } else if (!to.meta.auth && to.name == "login") {
                 /**
-                 * authenticated redirect to the login
+                 * Ckecking the user is auth and the route is
+                 * login we're redirect to the user to notes route
                  */
-                window.location.href = "/login";
-            });
-    } else {
-        /**
-         * is no auth route go to next() request
-         */
-        next();
-    }
+                return next({ name: "home" });
+            }
+        })
+        .catch((err) => {
+            /**
+             * Has a not valid crdential redirect to le login
+             */
+            if (to.meta.auth) {
+                //redirect to the login if the route is auth
+                next({ name: "login" });
+            } else {
+                next();
+            }
+        });
 });
+ 
 
 /**
- * Mounting App depending if the user is or not Authenticalble
- */
+ * Creating the Vue App
+*/
+const app = createApp(App);
+
+/**
+ * Global properties for vuejs
+*/
 $server
     .get("/api/gateway/user")
     .then((res) => {
-        /**
-         * Global User id from authenticated user
-         */
-        window.$id = res.data.id;
 
-        /**
-         * Creating the Vue App
-         */
-        const app = createApp(App);
-
-        /**
-         * Global properties for vuejs
-         */
-        app.config.globalProperties.$server = $server;
-        app.config.globalProperties.$host = $host;
-        app.config.globalProperties.$echo = $echo;
-        app.config.globalProperties.$channels = $channels;
-
-        /**
-         * Global components for Vuejs
-         */
-        components.forEach((index) => {
-            app.component(index[0], index[1]);
-        });
-
-        /**
-         * User routes using VUeRouter
-         */
-        app.use(router);
-
-        app.mount("#app");
+        app.config.globalProperties.$id = res.data.id;
     })
-    .catch((err) => {
-        //Unauthenticable APP
-        const app = createApp(Login);
-        app.mount("#login");
-    });
+    .catch((err) => {});
+
+app.config.globalProperties.$server = $server;
+app.config.globalProperties.$host = $host;
+app.config.globalProperties.$echo = $echo;
+app.config.globalProperties.$channels = $channels;
+
+/**
+ * Global components for Vuejs
+ */
+components.forEach((index) => {
+    app.component(index[0], index[1]);
+});
+
+/**
+ * User routes using VUeRouter
+ */
+app.use(router);
+
+app.mount("#app");
