@@ -224,19 +224,19 @@ export default {
          */
         listenEvents() {
             this.$echo
-                .private(this.$channels.ch_1(window.$id))
+                .private(this.$channels.ch_1(this.$id))
                 .listen("StoreEmailEvent", (res) => {
                     this.getEmails();
                 });
 
             this.$echo
-                .private(this.$channels.ch_1(window.$id))
+                .private(this.$channels.ch_1(this.$id))
                 .listen("UpdateEmailEvent", (res) => {
                     this.getEmails();
                 });
 
             this.$echo
-                .private(this.$channels.ch_1(window.$id))
+                .private(this.$channels.ch_1(this.$id))
                 .listen("DestroyEmailEvent", (res) => {
                     this.getEmails();
                 });

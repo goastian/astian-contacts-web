@@ -200,19 +200,19 @@ export default {
 
         listenEvents() {
             this.$echo
-                .private(this.$channels.ch_1(window.$id))
+                .private(this.$channels.ch_1(this.$id))
                 .listen("StoreAppEvent", (res) => {
                     this.getPhones();
                 });
 
             this.$echo
-                .private(this.$channels.ch_1(window.$id))
+                .private(this.$channels.ch_1(this.$id))
                 .listen("UpdateAppEvent", (res) => {
                     this.getPhones();
                 });
 
             this.$echo
-                .private(this.$channels.ch_1(window.$id))
+                .private(this.$channels.ch_1(this.$id))
                 .listen("DestroyAppEvent", (res) => {
                     this.getPhones();
                 });
