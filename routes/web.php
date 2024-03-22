@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::get('/login', [CodeController::class, 'login'])->name('login');
+//Route::get('/login', [CodeController::class, 'login'])->name('login');
 Route::get('/redirect', [CodeController::class, 'redirect'])->name('redirect');
 Route::get('/callback', [CodeController::class, 'callback'])->name('callback');
 
 Route::get('/{any}', function () {
     return view('app');
-})->where('any', '.*')->middleware('server');
+})->where('any', '.*');
  
