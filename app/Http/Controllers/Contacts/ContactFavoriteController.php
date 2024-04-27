@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Contacts;
 
-use App\Events\UpdateContactEvent;
 use App\Http\Controllers\GlobalController as Controller;
 use App\Models\Contacts\Contact;
 use Elyerr\ApiResponse\Exceptions\ReportError;
@@ -30,7 +29,8 @@ class ContactFavoriteController extends Controller
             $contact->favorite = !$contact->favorite;
             $contact->push();
 
-            UpdateContactEvent::dispatch($this->user()->id);
+            $this->privateChannel("UpdateContactEvent", "Contact updated", config('echo-client.channel') . "." . $this->user()->id);
+
         });
 
         return $this->showOne($contact, $contact->transformer, 201);

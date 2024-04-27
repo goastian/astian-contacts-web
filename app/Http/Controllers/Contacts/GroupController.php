@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Contacts;
 
-use App\Events\DestroyGroupEvent;
-use App\Events\StoreGroupEvent;
-use App\Events\UpdateGroupEvent;
 use App\Http\Controllers\GlobalController as Controller;
 use App\Models\Contacts\Contact;
 use App\Models\Contacts\Group;
@@ -46,7 +43,7 @@ class GroupController extends Controller
     public function store(Request $request, Group $group)
     {
         throw_if($this->search($group->table, null, 'user_id', $this->user()->id)->contains('name', $request->name),
-            new ReportError(__('El grupo ya ha sido registrado'), 422));
+            new ReportError(__('The group has been registered'), 422));
 
         $this->validate($request, [
             'name' => ['required', 'max:100'],
@@ -57,7 +54,7 @@ class GroupController extends Controller
             $group->user_id = $this->user()->id;
             $group->save();
 
-            StoreGroupEvent::dispatch($this->user()->id);
+            $this->privateChannel("StoreGroupEvent", "New group created", config('echo-client.channel') . "." . $this->user()->id);
         });
 
         return $this->showOne($group, $group->transformer, 201);
@@ -100,7 +97,7 @@ class GroupController extends Controller
 
                 $group->push();
 
-                UpdateGroupEvent::dispatch($this->user()->id);
+                $this->privateChannel("UpdateGroupEvent", "Group updated", config('echo-client.channel') . "." . $this->user()->id);
             }
         });
 
@@ -129,7 +126,8 @@ class GroupController extends Controller
 
             $group->delete();
 
-            DestroyGroupEvent::dispatch($this->user()->id);
+            $this->privateChannel("DestroyGroupEvent", "Group deleted", config('echo-client.channel') . "." . $this->user()->id);
+
         });
 
         return $this->showOne($group, $group->transformer);

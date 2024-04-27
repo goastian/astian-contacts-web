@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Contacts;
 
-use App\Events\DestroyPhoneEvent;
-use App\Events\StorePhoneEvent;
-use App\Events\UpdatePhoneEvent;
 use App\Http\Controllers\GlobalController as Controller;
 use App\Models\Contacts\Contact;
 use App\Models\Contacts\Phone;
@@ -57,7 +54,8 @@ class ContactPhoneController extends Controller
             $phone->contact_id = $contact->id;
             $phone->save();
 
-            StorePhoneEvent::dispatch($this->user()->id);
+            $this->privateChannel("StorePhoneEvent", "New phone created", config('echo-client.channel') . "." . $this->user()->id);
+
         });
 
         return $this->showOne($phone, $phone->transformer, 201);
@@ -111,7 +109,7 @@ class ContactPhoneController extends Controller
             if ($updated) {
                 $phone->push();
 
-                UpdatePhoneEvent::dispatch($this->user()->id);
+                $this->privateChannel("UpdatePhoneEvent", "Phone updated", config('echo-client.channel') . "." . $this->user()->id);
             }
 
         });
@@ -133,7 +131,7 @@ class ContactPhoneController extends Controller
 
         $phone->delete();
 
-        DestroyPhoneEvent::dispatch($this->user()->id);
+        $this->privateChannel("DestroyPhoneEvent", "Phone deleted", config('echo-client.channel') . "." . $this->user()->id);
 
         return $this->showOne($phone, $phone->transformer);
     }

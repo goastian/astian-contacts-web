@@ -86,8 +86,14 @@ export default {
                 })
                 .catch((err) => {
                     this.button.disabled = false;
-                    if (err.response && err.response.status == 422) {
+                    if (
+                        err.response &&
+                        err.response.status == 422 &&
+                        err.response.data.errors
+                    ) {
                         this.errors = err.response.data.errors;
+                    } else {
+                        this.errors.grupo = [err.response.data.message];
                     }
                 });
         },

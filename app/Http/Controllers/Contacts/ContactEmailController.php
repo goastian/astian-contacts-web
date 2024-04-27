@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Contacts;
 
 use App\Events\DestroyEmailEvent;
-use App\Events\StoreEmailEvent;
-use App\Events\UpdateEmailEvent;
 use App\Http\Controllers\GlobalController as Controller;
 use App\Models\Contacts\Contact;
 use App\Models\Contacts\Email;
@@ -59,7 +57,7 @@ class ContactEmailController extends Controller
             $email->contact_id = $contact->id;
             $email->save();
 
-            StoreEmailEvent::dispatch($this->user()->id);
+            $this->privateChannel("StoreEmailEvent", "New email created", config('echo-client.channel') . "." . $this->user()->id);
         });
 
         return $this->showOne($email, $email->transformer, 201);
@@ -111,7 +109,8 @@ class ContactEmailController extends Controller
             if ($updated) {
                 $email->push();
 
-                UpdateEmailEvent::dispatch($this->user()->id);
+                $this->privateChannel("UpdateEmailEvent", "Email updated", config('echo-client.channel') . "." . $this->user()->id);
+
             }
 
         });
@@ -132,7 +131,7 @@ class ContactEmailController extends Controller
 
         $email->delete();
 
-        DestroyEmailEvent::dispatch($this->user()->id);
+        $this->privateChannel("DestroyEmailEvent", "Email deleted", config('echo-client.channel') . "." . $this->user()->id);
 
         return $this->showOne($email, $email->transformer);
     }

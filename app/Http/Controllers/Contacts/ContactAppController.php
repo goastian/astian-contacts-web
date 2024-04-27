@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Contacts;
 
-use App\Events\DestroyAppEvent;
-use App\Events\StoreAppEvent;
-use App\Events\UpdateAppEvent;
 use App\Http\Controllers\GlobalController as Controller;
 use App\Models\Contacts\App;
 use App\Models\Contacts\Contact;
@@ -58,7 +55,8 @@ class ContactAppController extends Controller
             $app->contact_id = $contact->id;
             $app->save();
 
-            StoreAppEvent::dispatch($this->user()->id);
+            $this->privateChannel("StoreAppEvent", "New app created", config('echo-client.channel') . "." . $this->user()->id);
+
         });
 
         return $this->showOne($app, $app->transformer, 201);
@@ -111,8 +109,7 @@ class ContactAppController extends Controller
 
             if ($updated) {
                 $app->push();
-
-                UpdateAppEvent::dispatch($this->user()->id);
+                $this->privateChannel("UpdateAppEvent", "App updated", config('echo-client.channel') . "." . $this->user()->id);
             }
 
         });
@@ -134,7 +131,7 @@ class ContactAppController extends Controller
 
         $app->delete();
 
-        DestroyAppEvent::dispatch($this->user()->id);
+        $this->privateChannel("DestroyAppEvent", "App deleted", config('echo-client.channel') . "." . $this->user()->id);
 
         return $this->showOne($app, $app->transformer);
     }
