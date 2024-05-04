@@ -36,10 +36,6 @@ export default {
         }
     },
 
-    mounted() {
-        this.listenEvents();
-    },
-
     watch: {
         $route(to, from) {
             if (!to.params.id) {
@@ -51,26 +47,6 @@ export default {
     methods: {
         isRegistered(event) {
             this.registered = event;
-        },
-
-        listenEvents() {
-            this.$echo
-                .private(this.$channels.ch_1(this.$id))
-                .listen("StoreContactEvent", (e) => {
-                    this.getContacts();
-                });
-
-            this.$echo
-                .private(this.$channels.ch_1(this.$id))
-                .listen("UpdateContactEvent", (e) => {
-                    this.getContacts();
-                });
-
-            this.$echo
-                .private(this.$channels.ch_1(this.$id))
-                .listen("DestroyContactEvent", (e) => {
-                    this.getContacts();
-                });
         },
     },
 };
