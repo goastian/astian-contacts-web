@@ -4,11 +4,12 @@ import { $echo, $channels } from "./config/echo";
 import { router } from "./config/rutes";
 import { components } from "./config/globalComponents";
 
-import App from "./App.vue"; 
+import App from "./App.vue";
 import "./config/matomo";
 
 //bootstrap
 import * as bootstrap from "bootstrap";
+import Cookies from "js-cookie";
 
 /**
  * Cheking Routes from VueRouter
@@ -45,20 +46,18 @@ router.beforeEach((to, from, next) => {
             }
         });
 });
- 
 
 /**
  * Creating the Vue App
-*/
+ */
 const app = createApp(App);
 
 /**
  * Global properties for vuejs
-*/
+ */
 $server
     .get("/api/gateway/user")
     .then((res) => {
-
         app.config.globalProperties.$id = res.data.id;
     })
     .catch((err) => {});

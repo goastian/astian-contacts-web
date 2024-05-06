@@ -29,6 +29,6 @@ export default {
 .content {
     flex: 1;
     margin: 0;
-    min-height: 92vh;
+    min-height: 100vh;
 }
 </style>

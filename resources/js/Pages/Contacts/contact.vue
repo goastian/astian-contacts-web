@@ -1,109 +1,177 @@
 <template>
-    <div class="row">
-        <div class="col-12" v-show="registered">
-            <button
-                class="btn btn-secondary btn-sm float-end"
-                @click="destroyContact"
-            >
-                Delete Contact <i class="bi bi-person-fill-x mx-2"></i>
-            </button>
-        </div>
-        <div class="col">
-            <input
-                type="text"
-                class="form-control form-control-sm text-color"
-                placeholder="First Name"
-                v-model="contact.nombre"
-            />
-            <v-error :error="errors.nombre"></v-error>
-        </div>
-        <div class="col">
-            <input
-                type="text"
-                class="form-control form-control-sm text-color"
-                placeholder="Last Name"
-                v-model="contact.apellido"
-            />
-            <v-error :error="errors.apellido"></v-error>
-        </div>
-        <div class="col" v-show="!registered">
-            <input
-                type="text"
-                class="form-control form-control-sm text-color"
-                placeholder="Email Address"
-                v-model="contact.correo"
-            />
-            <v-error :error="errors.correo"></v-error>
-        </div>
-
-        <div class="col" v-show="!registered">
-            <input
-                type="text"
-                class="form-control form-control-sm text-color"
-                placeholder="Number phone"
-                v-model="contact.telefono"
-            />
-            <v-error :error="errors.telefono"></v-error>
-        </div>
-
-        <div class="col">
-            <input
-                type="text"
-                class="form-control form-control-sm text-color"
-                placeholder="Home Address"
-                v-model="contact.direccion"
-            />
-            <v-error :error="errors.direccion"></v-error>
-        </div>
-        <div class="col">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="favorito" />
-                <label class="form-check-label text-color" for="favorito">
-                    Mark as favorite
-                </label>
+    <div>
+        <p class="fw-bold text-sm text-color d-block m-0">
+            Update user information
+        </p>
+        <div class="contact-form">
+            <div class="item">
+                <div class="group">
+                    <div>
+                        <label for="" class="label text-color"
+                            >First Name</label
+                        >
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="First Name"
+                        v-model="contact.name"
+                    />
+                </div>
+                <v-error :error="errors.name"></v-error>
+            </div>
+            <div class="item">
+                <div class="group">
+                    <div>
+                        <label for="" class="label text-color">Last Name</label>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Last Name"
+                        v-model="contact.last_name"
+                    />
+                </div>
+                <v-error :error="errors.last_name"></v-error>
+            </div>
+            <div class="item" v-show="!registered">
+                <div class="group">
+                    <div>
+                        <label for="" class="label text-color"
+                            >Email Address</label
+                        >
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Email Address"
+                        v-model="contact.email"
+                    />
+                </div>
+                <v-error :error="errors.email"></v-error>
             </div>
 
-            <v-error :error="errors.favorite"></v-error>
-        </div>
-        <div class="col">
-            <label class="text-color">Choose group ...</label>
-            <select
-                class="form-select form-select-sm text-color"
-                aria-label="Choose group"
-                v-model="contact.grupo_id"
-            >
-                <option
-                    v-for="(item, index) in groups"
-                    :key="index"
-                    :value="item.id"
+            <div class="item" v-show="!registered">
+                <div class="group">
+                    <div>
+                        <v-select-search
+                            class="label text-color"
+                            :items="countries"
+                            param="name_en"
+                            text="Dial code"
+                            @selected="setDialCode"
+                        >
+                            <template #title="slotProps">
+                                {{
+                                    slotProps.item.emoji
+                                        ? slotProps.item.emoji +
+                                          " " +
+                                          slotProps.item.name_en +
+                                          " " +
+                                          slotProps.item.dial_code
+                                        : slotProps.text
+                                }}
+                            </template>
+
+                            <template #options="slotProps">
+                                {{ slotProps.items.emoji }}
+                                {{ slotProps.items.name_en }}
+                                {{ slotProps.items.dial_code }}
+                            </template>
+                        </v-select-search>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Number phone"
+                        v-model="contact.phone"
+                    />
+                </div>
+                <v-error :error="errors.dial_code"></v-error>
+                <v-error :error="errors.phone"></v-error>
+            </div>
+
+            <div class="item">
+                <div class="group">
+                    <div>
+                        <label for="" class="label text-color"
+                            >Home address</label
+                        >
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Home Address"
+                        v-model="contact.address"
+                    />
+                </div>
+                <v-error :error="errors.address"></v-error>
+            </div>
+            <div class="item">
+                <div class="form-check">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="favorite"
+                        v-model="contact.favorite"
+                    />
+                    <label class="form-check-label text-color" for="favorite">
+                        Mark as favorite
+                    </label>
+                </div>
+
+                <v-error :error="errors.favorite"></v-error>
+            </div>
+            <div class="item">
+                <div class="group">
+                    <div>
+                        <v-select-search
+                            class="label text-color"
+                            :items="groups"
+                            param="group"
+                            text="Choose Group"
+                            @selected="setGroup"
+                        >
+                            <template #title="slotProps">
+                                {{ slotProps.text }}
+                            </template>
+
+                            <template #options="slotProps">
+                                {{ slotProps.items.group }}
+                            </template>
+                        </v-select-search>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Group name"
+                        v-model="contact.group_name"
+                    />
+                </div>
+
+                <v-error :error="errors.grupo_id"></v-error>
+            </div>
+
+            <div class="item">
+                <button
+                    class="btn btn-sm btn-ternary"
+                    v-show="registered"
+                    @click="updateContact"
                 >
-                    {{ item.grupo }}
-                </option>
-            </select>
-            <v-error :error="errors.grupo_id"></v-error>
+                    Update Contact
+                    <i class="bi bi-person-circle mx-1"></i>
+                </button>
+                <button class="btn btn-primary btn-sm" @click="createContact">
+                    New Contact
+                    <i class="bi bi-person-fill-add mx-1"></i>
+                </button>
+                <button
+                    v-show="registered"
+                    class="btn btn-secondary btn-sm"
+                    @click="destroyContact"
+                >
+                    Delete Contact <i class="bi bi-trash3-fill mx-1"></i>
+                </button>
+            </div>
         </div>
-
-        <div class="col-12 mt-3">
-            <button
-                class="btn btn-sm btn-ternary mx-2"
-                v-show="registered"
-                @click="updateContact"
-            >
-                Update Contact
-                <i class="bi bi-person-circle"></i>
-            </button>
-            <button
-                href="#"
-                class="btn btn-primary btn-sm"
-                @click="createContact"
-            >
-                New Contact
-
-                <i class="bi bi-person-fill-add mx-2"></i>
-            </button>
-        </div>
-        <div class="col-12 mt-2">
-            <span v-show="message" class="mx-2 text-color">{{ message }}</span>
+        <div class="item">
+            <span v-show="message" class="mx-2 text-primary">{{
+                message
+            }}</span>
         </div>
     </div>
 </template>
@@ -120,6 +188,7 @@ export default {
             registered: false,
             message: false,
             button: null,
+            countries: {},
         };
     },
 
@@ -128,10 +197,11 @@ export default {
             this.registered = true;
             this.showContact(this.$route.params.id);
         }
-        this.getGroups();
     },
 
     mounted() {
+        this.getGroups();
+        this.getCountries();
         this.listenEvents();
     },
 
@@ -152,26 +222,41 @@ export default {
     },
 
     methods: {
+        getCountries() {
+            this.$server
+                .get("/api/locations/countries")
+                .then((res) => {
+                    this.countries = res.data;
+                })
+                .catch((err) => {});
+        },
+
+        setDialCode(event) {
+            this.contact.dial_code = event.dial_code;
+        },
+
+        setGroup(event) {
+            this.contact.group_id = event.id;
+            this.contact.group_name = event.group;
+        },
+
         /**
          * Show info about the contact
          *
          * @param {*} id
          */
-        showContact(id) {
-            this.$host
-                .get("/api/contacts/" + id)
-                .then((res) => {
-                    this.contact = res.data.data;
-                    this.errors = {};
-
-                    document.getElementById("favorito").checked =
-                        this.contact.favorito == 1 ? true : false;
-                })
-                .catch((err) => {
-                    if (err.response && err.response.status) {
-                        this.errors = err.response.data.errors;
-                    }
-                });
+        showContact() {
+            const id = this.$route.params.id;
+            if (id) {
+                this.contact = {};
+                this.errors = {};
+                this.$host
+                    .get("/api/contacts/" + id)
+                    .then((res) => {
+                        this.contact = res.data.data;
+                    })
+                    .catch((err) => {});
+            }
         },
 
         /**
@@ -182,17 +267,13 @@ export default {
                 .get("/api/groups", {
                     params: {
                         per_page: 100,
-                        order_by: "nombre",
+                        order_by: "name",
                     },
                 })
                 .then((res) => {
                     this.groups = res.data.data;
                 })
-                .catch((err) => {
-                    if (err.response) {
-                        console.log(err.response);
-                    }
-                });
+                .catch((err) => {});
         },
 
         /**
@@ -203,21 +284,22 @@ export default {
             this.button.disabled = true;
 
             //reset varaible message
-            this.message = false;
+            this.message = null;
 
+            /**
+             * Send user to register a new user view
+             */
             if (this.registered) {
                 this.button.disabled = false;
                 this.$router.push({
                     name: "contacts",
                 });
             } else {
-                this.contact.favorito =
-                    document.getElementById("favorito").checked;
-
                 this.$host
                     .post("/api/contacts", this.contact)
                     .then((res) => {
                         this.contact = res.data.data;
+
                         this.$router.push({
                             name: "contacts",
                             params: { id: this.contact.id },
@@ -230,7 +312,7 @@ export default {
                     })
                     .catch((err) => {
                         this.button.disabled = false;
-                        if (err.response && err.response.status) {
+                        if (err.response && err.response.status == 422) {
                             this.errors = err.response.data.errors;
                         }
                     });
@@ -245,16 +327,12 @@ export default {
             this.button.disabled = true;
 
             this.message = false;
-            this.contact.favorito = document.getElementById("favorito").checked;
 
             this.$host
                 .put(this.contact.links.update, this.contact)
                 .then((res) => {
                     this.registered = true;
                     this.errors = {};
-
-                    this.showContact(this.$route.params.id);
-
                     this.message = "The contact information has been updated.";
                     this.button.disabled = false;
                 })
@@ -281,9 +359,6 @@ export default {
                 })
                 .catch((err) => {
                     this.button.disabled = false;
-                    if (err.response && err.response.status) {
-                        console.log(err.response);
-                    }
                 });
         },
 
@@ -292,17 +367,20 @@ export default {
                 .private(this.$channels.ch_1(this.$id))
                 .listen("StoreGroupEvent", (res) => {
                     this.getGroups();
+                    this.showContact();
                 });
 
             this.$echo
                 .private(this.$channels.ch_1(this.$id))
                 .listen("UpdateGroupEvent", (res) => {
+                    this.showContact();
                     this.getGroups();
                 });
 
             this.$echo
                 .private(this.$channels.ch_1(this.$id))
                 .listen("DestroyGroupEvent", (res) => {
+                    this.showContact();
                     this.getGroups();
                 });
         },
@@ -310,19 +388,29 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.col {
-    flex: 0 0 auto;
-    padding-top: 2%;
+.btn {
+    margin-right: 0.3em;
+    margin-top: 0.2em;
+}
 
-    @media (min-width: 240px) {
-        padding-left: 0;
-        padding-right: 0;
-        margin: 0;
+.btn-remove {
+    position: absolute !important;
+    right: 1em;
+}
+
+.contact-form {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    font-size: 0.8em;
+    @media (min-width: 800px) {
+        font-size: 0.9em;
     }
-
-    @media (min-width: 840px) {
-        width: 30%;
-        margin-right: 2%;
+    .item {
+        flex: 1 1 calc(100% / 2);
+        margin-bottom: 0.1em;
+        padding: 0.1em;
     }
 }
 </style>

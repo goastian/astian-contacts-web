@@ -1,53 +1,45 @@
 <template>
-    <div class="add text-color" v-show="!pages.total">
-        <div class="add-head">Do you want to keep save your contacts?</div>
-        <div class="add-body">
-            <button class="btn btn-lg" @click="addContacts">
-                <i class="bi bi-journal-plus"></i>
-            </button>
+    <div>
+        <button class="print btn btn-light btn-sm" @click="print">Print</button>
+        <div class="table-box" id="table-box">
+            <p for="" class="border-bottom h5">Contact list</p>
+            <ul class="head">
+                <li>Full Name</li>
+                <li>Phone Number</li>
+                <li>Email Address</li>
+                <li>Group</li>
+            </ul>
+            <ul class="body" v-for="(item, index) in contacts" :key="index">
+                <li>
+                    <router-link
+                        :to="{ name: 'contacts', params: { id: item.id } }"
+                    >
+                        {{ item.name }}
+                        {{ item.last_name }}
+                    </router-link>
+                </li>
+                <li>
+                    {{ item.phones[0]["full_number"] }}
+                </li>
+                <li>
+                    <a
+                        :href="'mailto:' + item.emails[0]['email']"
+                        target="_blank"
+                    >
+                        {{ item.emails[0]["email"] }}
+                    </a>
+                </li>
+                <li>
+                    {{ item.group_name }}
+                </li>
+            </ul>
         </div>
-        <div class="add-footer text-center">
-            Keep your contacts saved and get it them any moment and anywhere.
-        </div>
+        <v-pagination
+            v-show="pages.total > pages.per_page"
+            :pages="pages"
+            @changed-page="getContacts"
+        ></v-pagination>
     </div>
-
-    <div class="row p-0 m-2">
-        <div
-            class="card text-color text-center"
-            v-for="(item, index) in contacts"
-            :key="index"
-        >
-            <div class="card-head text-uppercase border-bottom">
-                {{ item.nombre }} {{ item.apellido }}
-            </div>
-            <div class="card-body">
-                <p>
-                    <strong>Group</strong>
-                    {{ item.grupo ? item.grupo : "Unknow" }}
-                    <i
-                        v-show="item.favorito"
-                        class="bi bi-star-fill text-secondary mx-2"
-                    ></i>
-                </p>
-            </div>
-            <div class="card-footer">
-                <button class="btn disabled btn-sm bg-ternary float-start">
-                    <i class="bi bi-three-dots"></i>
-                </button>
-                <button
-                    class="btn btn-sm bg-primary float-end"
-                    @click="showContact(item.id)"
-                >
-                    <i class="bi bi-eye-fill"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    <v-pagination
-        v-show="pages.total > pages.per_page"
-        :pages="pages"
-        @changed-page="getContacts"
-    ></v-pagination>
 </template>
 <script>
 export default {
@@ -55,10 +47,11 @@ export default {
         return {
             contacts: {},
             form: {
-                per_page: 25,
+                per_page: 100,
                 page: 1,
             },
             pages: {},
+            head: ["Full Name", "Number Phone", "Email Address", ""],
         };
     },
 
@@ -66,9 +59,27 @@ export default {
         this.getContacts(1);
     },
 
+    mounted() {
+        this.listenEvents()    
+    },
+
     methods: {
         addContacts() {
             this.$router.push({ name: "contacts" });
+        },
+
+        print() {
+            var contenido = document.getElementById("table-box").innerHTML;
+            var contenidoOriginal = document.body.innerHTML;
+
+            document.body.innerHTML = contenido;
+            document.body.classList.add("table-box");
+            window.print();
+
+            document.body.classList.remove("table-box");
+            document.body.innerHTML = contenidoOriginal;
+            window.close();
+            location.reload();
         },
 
         showContact(id) {
@@ -88,50 +99,72 @@ export default {
                     this.contacts = res.data.data;
                     this.pages = res.data.meta.pagination;
                 })
-                .catch((err) => {
-                    if (err.response) {
-                    }
+                .catch((err) => {});
+        },
+
+        listenEvents() {
+            this.$echo
+                .private(this.$channels.ch_1(this.$id))
+                .listen("StoreContactEvent", (res) => {
+                    this.getContacts();
+                });
+
+            this.$echo
+                .private(this.$channels.ch_1(this.$id))
+                .listen("UpdateContactEvent", (res) => {
+                    this.getContacts();
+                });
+
+            this.$echo
+                .private(this.$channels.ch_1(this.$id))
+                .listen("DestroyContactEvent", (res) => {
+                    this.getContacts();
                 });
         },
     },
 };
 </script>
 <style lang="scss" scoped>
-.add {
-    width: 50% !important;
-    margin: 5% auto;
+.print {
+    position: absolute;
+    right: 2em;
+    top: 5em;
 }
-
-.add-head {
-    text-align: center;
-}
-
-.add-body {
-    font-weight: bold;
-    text-align: center;
-}
-
-.add-body .btn:hover {
-    font-weight: bold;
-    color: var(--seconday);
-}
-
-.add-body .bi {
-    font-size: 5rem;
-}
-
-.card {
-    flex: 0 0 auto;
-    margin-right: 1%;
-
-    @media (min-width: 320px) {
-        width: 98%;
-        margin-top: 2%;
+.table-box {
+    padding: 1em;
+    color: var(--code);
+    border-radius: 1em;
+    .head {
+        display: flex;
+        list-style: none;
+        padding: 0.2em 0.5em;
+        border-bottom: 0.1em solid var(--secondary);
+        li {
+            flex: 1 1 calc(100% / 5);
+            text-align: left;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
     }
 
-    @media (min-width: 940px) {
-        width: 18%;
-        margin-top: 1%;
+    .body {
+        display: flex;
+        list-style: none;
+        padding: 0em 0.5em;
+        margin: 0.5em 0;
+        li {
+            flex: 1 1 calc(100% / 5);
+            text-align: left;
+            font-size: 0.9em;
+        }
+        a {
+            text-decoration: none;
+        }
+
+        &:hover {
+            background-color: var(--light);
+            cursor: pointer;
+        }
     }
 }
 </style>

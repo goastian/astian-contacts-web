@@ -1,62 +1,67 @@
 <template>
-    <div class="row">
-        <div class="col">
-            <input
-                type="text"
-                class="form-control form-control-sm text-color"
-                placeholder="Work or personal ,etc"
-                v-model="email.nombre"
-            />
-            <v-error :error="errors.nombre"></v-error>
-        </div>
-        <div class="col">
-            <input
-                type="email"
-                class="form-control form-control-sm text-color"
-                placeholder="Email"
-                v-model="email.correo"
-            />
-            <v-error :error="errors.correo"></v-error>
-        </div>
-        <div class="col">
-            <button
-                class="btn btn-primary btn-sm"
-                @click="addEmail"
-                v-show="!email_update"
-            >
-                Add email <i class="bi bi-envelope-at mx-2"></i>
-            </button>
+    <div class="email-info">
+        <p class="fw-bold text-color m-0">Add new email</p>
+        <div class="inputs">
+            <div class="items">
+                <input
+                    type="text"
+                    class="input-theme"
+                    placeholder="Work or personal ,etc"
+                    v-model="email.name"
+                />
+                <v-error :error="errors.name"></v-error>
+            </div>
+            <div class="items">
+                <input
+                    type="email"
+                    class="input-theme"
+                    placeholder="Email"
+                    v-model="email.email"
+                />
+                <v-error :error="errors.email"></v-error>
+            </div>
+            <div class="items">
+                <button
+                    class="btn btn-primary btn-sm"
+                    @click="addEmail"
+                    v-show="!email_update"
+                >
+                    Add email <i class="bi bi-envelope-at mx-2"></i>
+                </button>
 
-            <button
-                class="btn btn-ternary btn-sm"
-                @click="updateEmail"
-                v-show="email_update"
-            >
-                Update email <i class="bi bi-envelope-at mx-2"></i>
-            </button>
+                <button
+                    class="btn btn-ternary btn-sm"
+                    @click="updateEmail"
+                    v-show="email_update"
+                >
+                    Update email <i class="bi bi-envelope-at mx-2"></i>
+                </button>
+            </div>
         </div>
-        <div class="col-12 pt-2">
-            <p v-for="(item, index) in emails" :key="index">
-                <strong class="text-color">
-                    {{ item.nombre }}
-                </strong>
-                <span class="text-color mx-4">
-                    {{ item.correo }}
-                </span>
+        <ul class="list" v-for="(item, index) in emails" :key="index">
+            <li class="fw-bold text-color">{{ item.name }}</li>
+            <li class="text-color">
+                <a :href="'mailto:' + item.email" target="_blank">
+                    {{ item.email }}
+                </a>
+            </li>
+            <li>
                 <button
                     class="btn btn-ternary btn-sm mx-4"
                     @click="update(item)"
                 >
                     <i class="bi bi-pencil-square text-color"></i>
                 </button>
+            </li>
+            <li>
                 <button
                     class="btn btn btn-sm btn-secondary"
                     @click="destroyEmail(item.links.destroy, $event)"
                 >
                     <i class="bi bi-trash text-color"></i>
                 </button>
-            </p>
-        </div>
+            </li>
+        </ul>
     </div>
 </template>
 <script>
@@ -246,16 +251,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.col {
-    flex: 0 0 auto;
-
-    @media (min-width: 320px) {
-        width: 98%;
-        margin-top: 2%;
+.email-info {
+    padding: 0.5em;
+    font-size: 0.8em;
+    @media (min-width: 800px) {
+        font-size: 0.9em;
     }
 
-    @media (min-width: 940px) {
-        width: 30%;
+    .inputs {
+        display: flex;
+        flex-wrap: wrap;
+
+        .items {
+            flex: 1 1 100%;
+            margin: 0.3em 0;
+
+            @media (min-width: 800px) {
+                flex: 1 1 calc(100% / 3);
+            }
+            padding-right: 0.5em;
+        }
+    }
+
+    .list {
+        display: flex;
+        list-style: none;
+        padding: 0;
+
+        li {
+            flex: 0 1 auto;
+            padding: 0.1em;
+            @media (min-width: 800px) {
+                padding-right: 2em;
+                padding-top: 0.5em;
+            }
+        }
     }
 }
 </style>

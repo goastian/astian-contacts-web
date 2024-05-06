@@ -64,7 +64,7 @@ body {
     min-height: 100vh;
 }
 
- 
+
 .btn-primary,
 .bg-primary {
     background-color: var(--primary) !important;
@@ -117,15 +117,6 @@ body {
     color: var(--dark);
 }
 
-.ql-syntax {
-    background-color: var(--code);
-    color: var(--white);
-    overflow: visible !important;
-    padding: 1%;
-    border-radius: 0.2%;
-    font-family: var(--font);
-}
-
 .errors {
     color: var(--secondary);
     font-size: var(--font-size);
@@ -137,4 +128,46 @@ body {
 
 .btn i:hover {
     font-weight: bolder !important;
+}
+
+.input-theme {
+    width: 100%;
+    border-color: none;
+    border-radius: 0.2em;
+    border-color: var(--white);
+    border-style: solid;
+    border-width: 0.1em;
+    padding: 0.2em 0.5em;
+    border-color: var(--light);
+}
+
+.group {
+    display: flex !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0.1em solid var(--light) !important;
+    border-radius: 0.2em !important;
+    padding: 0.1em 0em !important; 
+
+
+    .label {
+        flex: 1 1 40% !important;
+        padding: 0.2em 0.5em !important;
+    }
+
+    input {
+        flex: 1 1 60% !important;
+        border-style: none !important;
+        padding: 0.2em 0.3em !important;
+    }
+}
+
+.circle {
+    border-radius: 1em;
+    padding: 0.1em 0.3em;
+}
+
+div {
+    padding: 0;
+    margin: 0;
 }

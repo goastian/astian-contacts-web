@@ -31,8 +31,8 @@
                     @click="isClicked"
                 >
                     <i class="bi bi-person-lines-fill mx-2"></i>
-                    {{ item.nombre }} {{ item.apellido }}
-                    <i v-show="item.favorito" class="bi bi-star-fill mx-2"></i>
+                    {{ item.name }} {{ item.last_name }}
+                    <i v-show="item.favorite" class="bi bi-star-fill mx-2"></i>
                 </router-link>
             </li>
         </ul>
@@ -40,11 +40,12 @@
         <ul class="favorites" v-show="show_favorites">
             <li v-for="(item, index) in favorites" :key="index">
                 <router-link
+                    v-show="item.favorite"
                     :to="{ name: 'contacts', params: { id: item.id } }"
                     @click="isClicked"
                 >
                     <i class="bi bi-heart mx-2"></i>
-                    {{ item.nombre }} {{ item.apellido }}
+                    {{ item.name }} {{ item.last_name }}
                 </router-link>
             </li>
         </ul>
@@ -53,7 +54,7 @@
             <li v-for="(item, index) in groups" :key="index" @click="isClicked">
                 <a href="#" class="text-color">
                     <i class="bi bi-record-circle-fill mx-2"></i>
-                    {{ item.grupo }}
+                    {{ item.group }}
                 </a>
             </li>
         </ul>
@@ -106,7 +107,7 @@ export default {
             this.isClicked();
             this.$host
                 .get("/api/contacts", {
-                    params: { per_page: 100, order_by: "nombre" },
+                    params: { per_page: 100, order_by: "name" },
                 })
                 .then((res) => {
                     this.contacts = res.data.data;
@@ -145,7 +146,7 @@ export default {
                     params: {
                         per_page: 25,
                         favorito: 1,
-                        order_by: "nombre",
+                        order_by: "name",
                     },
                 })
                 .then((res) => {
@@ -200,6 +201,18 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.contacts, .favorites, .groups {
+    font-size: 0.9em;
+
+    li {
+        margin-bottom: 0.4em;
+
+        a {
+            text-decoration: none;
+        }
+    }
+}
+
 .side {
     width: 100%;
     min-height: 100vh;

@@ -1,12 +1,13 @@
 <template>
-    <div class="row p-0 m-2">
-        <v-contact @is-created="isRegistered"></v-contact>
+    <div class="p-0 m-0">
+        <v-contact @is-created="isRegistered" class="border"></v-contact>
 
-        <v-email v-show="registered" class="my-4 pt-4 border-top"></v-email>
+        <v-phone v-show="registered" class="border"></v-phone>
 
-        <v-phone v-show="registered" class="my-4 pt-4 border-top"></v-phone>
+        <v-email v-show="registered" class="border"></v-email>
 
-        <v-sites v-show="registered" class="my-4 pt-4 border-top"></v-sites>
+
+        <v-sites v-show="registered" class="border"></v-sites>
     </div>
 </template>
 <script>
@@ -52,12 +53,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.col {
-    flex: 0 0 auto;
-    padding-top: 2%;
-
-    @media (min-width: 840px) {
-        width: 32%;
-    }
+.border {
+    padding: 0.1em 0.2em;
+    margin: 0.2em;
+    border-radius: 0.2em;
 }
 </style>

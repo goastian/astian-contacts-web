@@ -1,65 +1,100 @@
 <template>
-    <div class="row">
-        <div class="col">
-            <input
-                type="text"
-                class="form-control form-control-sm text-color"
-                placeholder="Name"
-                v-model="phone.nombre"
-            />
-            <v-error :error="errors.nombre"></v-error>
-        </div>
-        <div class="col">
-            <input
-                type="email"
-                class="form-control form-control-sm text-color"
-                placeholder="Phone"
-                v-model="phone.numero"
-            />
-            <v-error :error="errors.numero"></v-error>
-        </div>
-        <div class="col">
-            <button
-                class="btn btn-primary btn-sm"
-                v-show="!phone_update"
-                @click="addPhone"
-            >
-                Add phone
-                <i class="bi bi-telephone-plus-fill mx-2"></i>
-            </button>
+    <div class="phone-info">
+        <p class="fw-bold text-color m-0">Add new phone number</p>
 
-            <button
-                class="btn btn-ternary btn-sm"
-                v-show="phone_update"
-                @click="updatePhone"
-            >
-                Update phone
-                <i class="bi bi-telephone-plus-fill mx-2"></i>
-            </button>
-        </div>
+        <div class="inputs">
+            <div class="items">
+                <input
+                    type="text"
+                    class="input-theme"
+                    placeholder="Name"
+                    v-model="phone.name"
+                />
+                <v-error :error="errors.name"></v-error>
+            </div>
+            <div class="items">
+                <div class="group">
+                    <div>
+                        <v-select-search
+                            class="label text-color"
+                            :items="countries"
+                            param="name_en"
+                            text="Dial code"
+                            @selected="dialCode"
+                        >
+                            <template #title="slotProps">
+                                {{
+                                    slotProps.item.emoji
+                                        ? slotProps.item.emoji +
+                                          " " +
+                                          slotProps.item.name_en +
+                                          " " +
+                                          slotProps.item.dial_code
+                                        : slotProps.text
+                                }}
+                            </template>
 
-        <div class="col-12 pt-2">
-            <p v-for="(item, index) in phones" :key="index">
-                <strong class="text-color">
-                    {{ item.nombre }}
-                </strong>
-                <span class="text-color mx-4">
-                    {{ item.numero }}
-                </span>
+                            <template #options="slotProps">
+                                {{ slotProps.items.emoji }}
+                                {{ slotProps.items.name_en }}
+                                {{ slotProps.items.dial_code }}
+                            </template>
+                        </v-select-search>
+                    </div>
+                    <input
+                        type="email"
+                        class="input-theme"
+                        placeholder="Phone"
+                        v-model="phone.number"
+                    />
+                </div>
+                <v-error :error="errors.dial_code"></v-error>
+                <v-error :error="errors.number"></v-error>
+            </div>
+            <div class="items">
+                <button
+                    class="btn btn-primary btn-sm"
+                    v-show="!phone_update"
+                    @click="addPhone"
+                >
+                    Add phone
+                    <i class="bi bi-telephone-plus-fill mx-2"></i>
+                </button>
+
+                <button
+                    class="btn btn-ternary btn-sm"
+                    v-show="phone_update"
+                    @click="updatePhone"
+                >
+                    Update phone
+                    <i class="bi bi-telephone-plus-fill mx-2"></i>
+                </button>
+            </div>
+        </div>
+        <ul class="list" v-for="(item, index) in phones" :key="index">
+            <li class="text-color fw-bold">
+                {{ item.name }}
+            </li>
+            <li>
+                {{ item.full_number }}
+            </li>
+            <li>
                 <button
                     class="btn btn-ternary btn-sm mx-4 btn-sm"
                     @click="update(item)"
                 >
                     <i class="bi bi-pencil-square text-color"></i>
                 </button>
+            </li>
+            <li>
                 <button
                     class="btn btn-sm btn-secondary btn-sm"
                     @click="destroyPhone(item.links.destroy, $event)"
                 >
                     <i class="bi bi-trash text-color"></i>
                 </button>
-            </p>
-        </div>
+            </li>
+        </ul>
     </div>
 </template>
 <script>
@@ -71,6 +106,7 @@ export default {
             errors: {},
             phone_update: false,
             phone_request: null,
+            countries: {},
         };
     },
 
@@ -82,6 +118,7 @@ export default {
         if (this.$route.params.id) {
             this.getPhones();
         }
+        this.getCountries();
         this.listenEvents();
     },
 
@@ -96,6 +133,18 @@ export default {
     },
 
     methods: {
+        getCountries() {
+            this.$server
+                .get("api/locations/countries")
+                .then((res) => {
+                    this.countries = res.data;
+                })
+                .catch((err) => {});
+        },
+
+        dialCode(event) {
+            this.phone.dial_code = event.dial_code;
+        },
         /**
          * get the actual uri
          */
@@ -224,16 +273,38 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.col {
-    flex: 0 0 auto;
+.phone-info {
+    padding: 0.5em;
+    font-size: 0.8em;
+    @media (min-width: 800px) {
+        font-size: 0.9em;
+    }
+    .inputs {
+        display: flex;
+        flex-wrap: wrap;
 
-    @media (min-width: 320px) {
-        width: 98%;
-        margin-top: 2%;
+        .items {
+            flex: 1 0 100%;
+            margin: 0.3em 0;
+            @media (min-width: 800px) {
+                flex: 1 1 calc(100% / 3);
+                padding-right: 0.2em;
+            }
+        }
     }
 
-    @media (min-width: 940px) {
-        width: 30%;
+    .list {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        li {
+            flex: 0 1 auto;
+            padding: 0.1em;
+            @media (min-width: 800px) {
+                padding-right: 2em;
+                padding-top: 0.5em;
+            }
+        }
     }
 }
 </style>

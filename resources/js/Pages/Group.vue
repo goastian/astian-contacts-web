@@ -1,55 +1,59 @@
 <template>
-    <div class="row p-0 mt-2 mx-0">
-        <div class="col">
-            <input
-                type="text"
-                class="form-control"
-                placeholder="Group name"
-                v-model="group.grupo"
-            />
-            <v-error :error="errors.grupo"></v-error>
-        </div>
-        <div class="col">
-            <button
-                class="btn btn-primary"
-                v-show="!group_update"
-                @click="createGroup"
-            >
-                Add Group
-                <i class="bi bi-collection"></i>
-            </button>
+    <div class="group-info">
+        <p class="text-color fw-bold p-0 m-0">Add new groups</p>
+        <div class="inputs">
+            <div class="item">
+                <div class="group">
+                    <div>
+                        <label for="" class="label">Group Name</label>
+                    </div>
+                    <input
+                        type="text"
+                        class="input-theme"
+                        placeholder="Group name"
+                        v-model="group.group"
+                    />
+                </div>
+                <v-error :error="errors.group"></v-error>
+            </div>
+            <div class="item">
+                <button
+                    class="btn btn-primary"
+                    v-show="!group_update"
+                    @click="createGroup"
+                >
+                    Add Group
+                    <i class="bi bi-collection"></i>
+                </button>
 
-            <button
-                v-show="group_update"
-                class="btn btn-primary btn-ternary"
-                @click="updateGroup"
-            >
-                Change Group Name
-                <i class="bi bi-cloud-upload mx-2"></i>
-            </button>
+                <button
+                    v-show="group_update"
+                    class="btn btn-primary btn-ternary"
+                    @click="updateGroup"
+                >
+                    Change Group Name
+                    <i class="bi bi-cloud-upload mx-2"></i>
+                </button>
+            </div>
         </div>
-        <div class="col-12">
-            <p class="list-title text-color border-bottom">List group</p>
-            <span
-                class="list-group bg-ternary text-color"
-                v-for="(item, index) in groups"
-                :key="index"
-            >
+
+        <ul class="list">
+            <li v-for="(item, index) in groups" :key="index">
                 <button
                     class="btn btn-primary btn-sm mx-2"
                     @click="update(item, $event)"
                 >
                     <i class="bi bi-pencil-square"></i>
                 </button>
-                {{ item.grupo }}
+                {{ item.group }}
                 <button
                     class="btn btn-secondary btn-sm mx-2"
                     @click="destroyGroup(item, $event)"
                 >
                     <i class="bi bi-trash"></i>
                 </button>
-            </span>
-        </div>
+            </li>
+        </ul>
     </div>
 </template>
 <script>
@@ -93,7 +97,7 @@ export default {
                     ) {
                         this.errors = err.response.data.errors;
                     } else {
-                        this.errors.grupo = [err.response.data.message];
+                        this.errors.group = [err.response.data.message];
                     }
                 });
         },
@@ -186,37 +190,39 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.col {
-    flex: 0 0 auto;
-    padding-top: 2%;
-
-    @media (min-width: 320px) {
-        width: 100%;
-        margin: 0;
+.group-info {
+    color: var(--code);
+    .inputs {
+        display: flex;
+        flex-wrap: wrap;
+        .item {
+            flex: 1 1 auto;
+            padding: 0.5em 0.2em;
+            .btn {
+                font-size: 0.8em;
+            }
+        }
     }
 
-    @media (min-width: 850px) {
-        width: 48%;
-        margin-left: 2%;
-    }
-}
+    .list {
+        list-style: none;
+        padding: 0;
+        display: flex !important;
+        flex-wrap: wrap !important;
 
-.list-title {
-    margin-left: 2%;
-    margin-top: 2%;
-}
+        li {
+            flex: 0 1 auto;
+            font-size: 0.9em;
+            border: 1px solid var(--light);
+            margin-right: 1em;
+            margin-bottom: 1em;
+            padding: 0.4em;
+            border-radius: 0.5em;
 
-.list-group {
-    display: inline-block !important;
-    margin-right: 2%;
-    margin-top: 0.6%;
-    padding: 0.5%;
-    margin-left: 2%;
-
-    @media (min-width: 320px) {
-    }
-
-    @media (min-width: 850px) {
+            .btn {
+                font-size: 0.8em;
+            }
+        }
     }
 }
 </style>
