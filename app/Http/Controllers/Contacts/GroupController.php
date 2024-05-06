@@ -31,7 +31,7 @@ class GroupController extends Controller
 
         $data = $this->search($group->table, $params, 'user_id', $this->user()->id);
 
-        return $this->showAll($data, $group->transformer);
+        return $this->showAll($data, $group->transformer, 200, false);
     }
 
     /**

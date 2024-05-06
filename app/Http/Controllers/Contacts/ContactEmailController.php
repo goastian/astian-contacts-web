@@ -31,7 +31,7 @@ class ContactEmailController extends Controller
 
         $data = $this->search($email->table, $params, 'contact_id', $contact->id);
 
-        return $this->showAll($data, $email->transformer);
+        return $this->showAll($data, $email->transformer, 200, false);
 
     }
 

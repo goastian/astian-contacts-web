@@ -33,7 +33,7 @@ class GroupTransformer extends TransformerAbstract
     {
         return [
             'id' => $data->id,
-            'grupo' => $data->name,
+            'group' => $data->name,
             'links' => [
                 'parent' => route('groups.index'),
                 'store' => route('groups.store'),
@@ -48,7 +48,7 @@ class GroupTransformer extends TransformerAbstract
     public static function transformRequest($index)
     {
         $attribute = [
-            'grupo' => 'name',
+            'group' => 'name',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -57,7 +57,7 @@ class GroupTransformer extends TransformerAbstract
     public static function transformResponse($index)
     {
         $attribute = [
-            'name' => 'grupo',
+            'name' => 'group',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -67,7 +67,7 @@ class GroupTransformer extends TransformerAbstract
     {
         $attributes = [
             'id' => 'id',
-            'grupo' => 'name',
+            'group' => 'name',
         ];
 
         return isset($attributes[$index]) ? $attributes[$index] : null;

@@ -2,6 +2,7 @@
 
 namespace App\Transformers\Contacts;
 
+use App\Models\Contacts\Phone;
 use League\Fractal\TransformerAbstract;
 
 class PhoneTransformer extends TransformerAbstract
@@ -31,10 +32,14 @@ class PhoneTransformer extends TransformerAbstract
      */
     public function transform($data)
     {
+        $phone =  Phone::find($data->id);
+
         return [
             'id' => $data->id,
-            'nombre' => $data->name,
-            'numero' => $data->number,
+            'name' => $data->name,
+            'dial_code' => $data->dial_code,
+            'number' => $data->number,
+            'full_number' => $phone->full_number,
             'links' => [
                 'parent' => route('contacts.phones.index', ['contact' => $data->contact_id]),
                 'store' => route('contacts.phones.store', ['contact' => $data->contact_id]),
@@ -48,8 +53,9 @@ class PhoneTransformer extends TransformerAbstract
     public static function transformRequest($index)
     {
         $attribute = [
-            'nombre' => 'name',
-            'numero' => 'number',
+            'name' => 'name',
+            'dial_code' => 'dial_code',
+            'number' => 'number',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -58,8 +64,9 @@ class PhoneTransformer extends TransformerAbstract
     public static function transformResponse($index)
     {
         $attribute = [
-            'name' => 'nombre',
-            'number' => 'numero',
+            'name' => 'name',
+            'dial_code' => 'dial_code',
+            'number' => 'number',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -69,8 +76,9 @@ class PhoneTransformer extends TransformerAbstract
     {
         $attributes = [
             'id' => 'id',
-            'nombre' => 'name',
-            'numero' => 'number',
+            'name' => 'name',
+            'dial_code' => 'dial_code',
+            'number' => 'number',
         ];
 
         return isset($attributes[$index]) ? $attributes[$index] : null;

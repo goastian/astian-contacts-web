@@ -30,7 +30,7 @@ class ContactPhoneController extends Controller
 
         $data = $this->search($phone->table, $params, 'contact_id', $contact->id);
 
-        return $this->showAll($data, $phone->transformer);
+        return $this->showAll($data, $phone->transformer, 200, false);
     }
 
     /**
@@ -46,6 +46,7 @@ class ContactPhoneController extends Controller
 
         $this->validate($request, [
             'name' => ['required', 'max:50'],
+            'dial_code' => ['required', 'max:8'],
             'number' => ['required', 'max:20'],
         ]);
 
@@ -89,7 +90,8 @@ class ContactPhoneController extends Controller
 
         $this->validate($request, [
             'name' => ['max:50'],
-            'number' => ['max:20'],
+            'dial_code' => ['nullable', 'max:8'],
+            'number' => ['nullable', 'max:20'],
         ]);
 
         DB::transaction(function () use ($request, $contact, $phone) {
@@ -99,6 +101,11 @@ class ContactPhoneController extends Controller
             if ($this->is_diferent($phone->name, $request->name)) {
                 $updated = true;
                 $phone->name = $request->name;
+            }
+
+            if ($this->is_diferent($phone->dial_code, $request->dial_code)) {
+                $updated = true;
+                $phone->dial_code = $request->dial_code;
             }
 
             if ($this->is_diferent($phone->number, $request->number)) {

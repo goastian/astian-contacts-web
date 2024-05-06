@@ -33,8 +33,8 @@ class EmailTransformer extends TransformerAbstract
     {
         return [
             'id' => $data->id,
-            'nombre' => $data->name,
-            'correo' => $data->email,
+            'name' => $data->name,
+            'email' => $data->email,
             'links' => [
                 'parent' => route('contacts.emails.index', ['contact' => $data->contact_id]),
                 'store' => route('contacts.emails.store', ['contact' => $data->contact_id]),
@@ -48,8 +48,8 @@ class EmailTransformer extends TransformerAbstract
     public static function transformRequest($index)
     {
         $attribute = [
-            'nombre' => 'name',
-            'correo' => 'email_address',
+            'name' => 'name',
+            'email' => 'email_address',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -58,8 +58,8 @@ class EmailTransformer extends TransformerAbstract
     public static function transformResponse($index)
     {
         $attribute = [
-            'name' => 'nombre',
-            'email_address' => 'correo',
+            'name' => 'name',
+            'email_address' => 'email',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -69,8 +69,8 @@ class EmailTransformer extends TransformerAbstract
     {
         $attributes = [
             'id' => 'id',
-            'nombre' => 'name',
-            'descripcion' => 'description',
+            'name' => 'name',
+            'descriptition' => 'description',
         ];
 
         return isset($attributes[$index]) ? $attributes[$index] : null;

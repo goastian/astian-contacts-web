@@ -34,7 +34,7 @@ class AppTransformer extends TransformerAbstract
         return [
             'id' => $data->id,
             'app' => $data->name,
-            'link' => $data->uri,
+            'uri' => $data->uri,
             'links' => [
                 'parent' => route('contacts.apps.index', ['contact' => $data->contact_id]),
                 'store' => route('contacts.apps.store', ['contact' => $data->contact_id]),

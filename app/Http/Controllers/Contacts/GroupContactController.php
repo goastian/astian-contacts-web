@@ -29,6 +29,6 @@ class GroupContactController extends Controller
 
         $data = $this->search($contact->table, $params, 'group_id', $group->id);
 
-        return $this->showAll($data, $contact->transformer);
+        return $this->showAll($data, $contact->transformer, 200, false);
     }
 }

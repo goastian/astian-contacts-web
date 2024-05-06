@@ -25,8 +25,13 @@ class Contact extends Master
         'last_name',
         'address',
         'company',
+        'company_id',
         'group_id',
-        'favorite'
+        'favorite',
+    ];
+
+    protected $appends = [
+        'group_name',
     ];
 
     public function group()
@@ -49,4 +54,8 @@ class Contact extends Master
         return $this->hasMany(Phone::class);
     }
 
+    public function getGroupNameAttribute()
+    {
+        return isset($this->group) ? $this->group->name : null;
+    }
 }

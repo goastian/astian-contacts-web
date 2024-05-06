@@ -51,12 +51,14 @@ class ContactController extends Controller
         $this->validate($request, [
             'name' => ['required', 'max:100'],
             'last_name' => ['required', 'max:100'],
+            'dial_code' => ['required', 'max:10'],
             'number' => ['required', 'max:20'],
             'email' => ['required', 'email', 'max:100'],
-            'address' => ['max:150'],
-            'company' => ['max:150'],
-            'group_id' => [Rule::in($data)],
-            'favorite' => ['boolean'],
+            'address' => ['nullable', 'max:150'],
+            'company' => ['nullable', 'max:150'],
+            'company_id' => ['nullable', 'max:150'],
+            'group_id' => ['nullable', Rule::in($data)],
+            'favorite' => ['nullable', 'boolean'],
         ]);
 
         DB::transaction(function () use ($request, $contact, $phone, $email) {
@@ -66,6 +68,7 @@ class ContactController extends Controller
 
             $phone->name = "Personal";
             $phone->number = $request->number;
+            $phone->dial_code = $request->dial_code;
             $phone->contact_id = $contact->id;
             $phone->save();
 
@@ -110,12 +113,13 @@ class ContactController extends Controller
         $data = $this->search($group->table, null, 'user_id', $this->user()->id)->pluck('id');
 
         $this->validate($request, [
-            'name' => ['max:100'],
-            'last_name' => ['max:100'],
-            'address' => ['max:150'],
-            'company' => ['max:150'],
+            'name' => ['nullable', 'max:100'],
+            'last_name' => ['nullable', 'max:100'],
+            'address' => ['nullable', 'max:150'],
+            'company' => ['nullable', 'max:150'],
+            'company_id' => ['nullable', 'max:150'],
             'group_id' => ['nullable', Rule::in($data)],
-            'favorite' => ['boolean'],
+            'favorite' => ['nullable', 'boolean'],
         ]);
 
         DB::transaction(function () use ($request, $contact) {
@@ -139,6 +143,11 @@ class ContactController extends Controller
             if ($this->is_diferent($contact->company, $request->company)) {
                 $updated = true;
                 $contact->company = $request->company;
+            }
+
+            if ($this->is_diferent($contact->company_id, $request->company_id)) {
+                $updated = true;
+                $contact->company_id = $request->company_id;
             }
 
             if ($this->is_diferent($contact->group_id, $request->group_id)) {
@@ -199,6 +208,6 @@ class ContactController extends Controller
 
         });
 
-        return $this->showOne($contact, $contact->transformer);
+        return $this->message("Contact deleted", 201);
     }
 }

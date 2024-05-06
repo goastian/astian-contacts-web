@@ -21,7 +21,15 @@ class Phone extends Master
     protected $fillable = [
         'name',
         'number',
+        'dial_code',
     ];
+
+    protected $appends = ['full_number'];
+
+    public function getFullNumberAttribute()
+    {
+        return $this->dial_code . " " . $this->number;
+    }
 
     public function contact()
     {

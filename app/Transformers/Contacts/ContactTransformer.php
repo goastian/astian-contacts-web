@@ -2,12 +2,16 @@
 
 namespace App\Transformers\Contacts;
 
-use App\Models\Contacts\Group;
+use App\Models\Contacts\App;
+use App\Models\Contacts\Contact;
 use Elyerr\ApiResponse\Assets\Asset;
+use Elyerr\ApiResponse\Assets\JsonResponser;
 use League\Fractal\TransformerAbstract;
 
 class ContactTransformer extends TransformerAbstract
 {
+
+    use JsonResponser;
     /**
      * List of resources to automatically include
      *
@@ -33,29 +37,34 @@ class ContactTransformer extends TransformerAbstract
      */
     public function transform($data)
     {
-        $grupo = Group::find($data->group_id);
+        $contact = Contact::find($data->id);
 
         return [
             'id' => $data->id,
-            'nombre' => $data->name,
-            'apellido' => $data->last_name,
-            'direccion' => $data->address,
-            'empresa' => $data->company,
-            'grupo_id' => $data->group_id,
-            'grupo' => $data->group_id ? $grupo->name : null,
-            'creado' => $data->created_at,
-            'favorito' => $data->favorite,
-            'actualizado' => $data->updated_at,
+            'name' => $data->name,
+            'last_name' => $data->last_name,
+            'address' => $data->address,
+            'company' => $data->company,
+            'company_id' => $data->company_id,
+            'created_at' => $data->created_at,
+            'updated_at' => $data->updated_at,
+            'favorite' => $data->favorite,
+            'group_id' => $data->group_id,
+            'group_name' => $contact->group_name,
+            'emails' => $contact->emails()->get(),
+            'phones' => $contact->phones()->get(),
+            'social_networks' => $contact->apps()->get(),
+
             'links' => [
                 'parent' => route('contacts.index'),
                 'store' => route('contacts.store'),
-                'show' => route('contacts.show', ['contact' => $data->id]),
-                'update' => route('contacts.update', ['contact' => $data->id]),
-                'destroy' => route('contacts.destroy', ['contact' => $data->id]),
-                'favorite' => route('contacts.favorite', ['id' => $data->id]),
-                'phone' => route('contacts.phones.index', ['contact' => $data->id]),
-                'email' => route('contacts.emails.index', ['contact' => $data->id]),
-                'site' => route('contacts.apps.index', ['contact' => $data->id]),
+                'show' => route('contacts.show', ['contact' => $contact->id]),
+                'update' => route('contacts.update', ['contact' => $contact->id]),
+                'destroy' => route('contacts.destroy', ['contact' => $contact->id]),
+                'favorite' => route('contacts.favorite', ['id' => $contact->id]),
+                'phone' => route('contacts.phones.index', ['contact' => $contact->id]),
+                'email' => route('contacts.emails.index', ['contact' => $contact->id]),
+                'site' => route('contacts.apps.index', ['contact' => $contact->id]),
             ],
         ];
     }
@@ -63,14 +72,16 @@ class ContactTransformer extends TransformerAbstract
     public static function transformRequest($index)
     {
         $attribute = [
-            'nombre' => 'name',
-            'apellido' => 'last_name',
-            'telefono' => 'number',
-            'correo' => 'email',
-            'direccion' => 'address',
-            'empresa' => 'company',
-            'grupo_id' => 'group_id',
-            'favorito' => 'favorite',
+            'name' => 'name',
+            'last_name' => 'last_name',
+            'phone' => 'number',
+            'dial_code' => 'dial_code',
+            'email' => 'email',
+            'address' => 'address',
+            'company' => 'company',
+            'company_id' => 'company_id',
+            'group_id' => 'group_id',
+            'favorite' => 'favorite',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -81,14 +92,16 @@ class ContactTransformer extends TransformerAbstract
         $index = Asset::changeIndex($index);
 
         $attribute = [
-            'name' => 'nombre',
-            'last_name' => 'apellido',
-            'number' => 'telefono',
-            'email' => 'correo',
-            'address' => 'direccion',
-            'company' => 'empresa',
-            'group_id' => 'grupo_id',
-            'favorite' => 'favorito',
+            'name' => 'name',
+            'last_name' => 'last_name',
+            'dial_code' => 'dial_code',
+            'number' => 'phone',
+            'email' => 'email',
+            'address' => 'address',
+            'company' => 'company',
+            'company_id' => 'company_id',
+            'group_id' => 'group_id',
+            'favorite' => 'favorite',
         ];
 
         return isset($attribute[$index]) ? $attribute[$index] : null;
@@ -98,14 +111,14 @@ class ContactTransformer extends TransformerAbstract
     {
         $attributes = [
             'id' => 'id',
-            'nombre' => 'name',
-            'apellido' => 'last_name',
-            'direccion' => 'address',
-            'empresa' => 'company',
-            'favorito' => 'favorite',
-            'grupo_id' => 'group_id',
-            'creado' => 'created_at',
-            'actualizado' => 'updated_at',
+            'name' => 'name',
+            'last_name' => 'last_name',
+            'address' => 'address',
+            'company' => 'company',
+            'favorite' => 'favorite',
+            'grup_id' => 'group_id',
+            'created_at' => 'created_at',
+            'updated_at' => 'updated_at',
         ];
 
         return isset($attributes[$index]) ? $attributes[$index] : null;
