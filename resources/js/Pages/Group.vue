@@ -107,17 +107,12 @@ export default {
                 .get("/api/groups", {
                     params: {
                         per_page: 100,
-                        order_by: "nombre",
                     },
                 })
                 .then((res) => {
                     this.groups = res.data.data;
                 })
-                .catch((err) => {
-                    if (err.response) {
-                        console.log(err.response);
-                    }
-                });
+                .catch((err) => {});
         },
 
         update(item) {
