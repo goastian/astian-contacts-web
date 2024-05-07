@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div class="contact-form">
         <p class="fw-bold text-sm text-color d-block m-0">
             Update user information
         </p>
-        <div class="contact-form">
+        <div class="inputs">
             <div class="item">
                 <div class="group">
                     <div>
@@ -399,18 +399,23 @@ export default {
 }
 
 .contact-form {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0;
-    margin: 0;
-    font-size: 0.8em;
-    @media (min-width: 800px) {
-        font-size: 0.9em;
-    }
-    .item {
-        flex: 1 1 calc(100% / 2);
-        margin-bottom: 0.1em;
-        padding: 0.1em;
+    background-color: var(--light);
+
+    .inputs {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0;
+        margin: 0;
+        font-size: 0.8em;
+
+        @media (min-width: 800px) {
+            font-size: 0.9em;
+        }
+        .item {
+            flex: 1 1 calc(100% / 2);
+            margin-bottom: 0.1em;
+            padding: 0.1em;
+        }
     }
 }
 </style>

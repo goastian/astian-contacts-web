@@ -254,6 +254,7 @@ export default {
 .email-info {
     padding: 0.5em;
     font-size: 0.8em;
+    background-color: var(--light);
     @media (min-width: 800px) {
         font-size: 0.9em;
     }

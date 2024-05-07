@@ -230,6 +230,9 @@ export default {
 .sites-info {
     padding: 0.5em;
     font-size: 0.8em;
+    background-color: var(--light);
+    border-radius: 1em;
+
     @media (min-width: 800px) {
         font-size: 0.9em;
     }
