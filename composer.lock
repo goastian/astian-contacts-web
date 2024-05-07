@@ -610,16 +610,16 @@
         },
         {
             "name": "elyerr/passport-connect",
-            "version": "v1.0.6",
+            "version": "v1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/elyerr/passport-connect.git",
-                "reference": "5e3fe52ae504a0902c438ebddb0afb1c6db9676d"
+                "reference": "55dc98b06c62ffdf0c80db7e8a487aae232e5152"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/elyerr%2Fpassport-connect/repository/archive.zip?sha=5e3fe52ae504a0902c438ebddb0afb1c6db9676d",
-                "reference": "5e3fe52ae504a0902c438ebddb0afb1c6db9676d",
+                "url": "https://gitlab.com/api/v4/projects/elyerr%2Fpassport-connect/repository/archive.zip?sha=55dc98b06c62ffdf0c80db7e8a487aae232e5152",
+                "reference": "55dc98b06c62ffdf0c80db7e8a487aae232e5152",
                 "shasum": ""
             },
             "require": {
@@ -655,9 +655,9 @@
             "description": "Permite conectar microservicios a traves de outh2-passport-server facilmente",
             "support": {
                 "issues": "https://gitlab.com/elyerr/passport-connect/-/issues",
-                "source": "https://gitlab.com/elyerr/passport-connect/-/tree/v1.0.6"
+                "source": "https://gitlab.com/elyerr/passport-connect/-/tree/v1.0.7"
             },
-            "time": "2024-03-13T13:43:56+00:00"
+            "time": "2024-05-06T18:47:43+00:00"
         },
         {
             "name": "fruitcake/php-cors",
